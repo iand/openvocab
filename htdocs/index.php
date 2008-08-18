@@ -11,7 +11,10 @@ define('OV_ARC_DIR', OV_LIB_DIR . "arc_2008_05_30");
 define('OV_KONSTRUKT_DIR', OV_LIB_DIR . "konstrukt" . DIRECTORY_SEPARATOR . "lib");
 define('MORIARTY_ARC_DIR', OV_ARC_DIR . DIRECTORY_SEPARATOR);
 define('MORIARTY_OPT_NO_ETAG', TRUE);
-define('MORIARTY_HTTP_CACHE_DIR', dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'cache');
+if (file_exists(dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'cache')) {
+  define('MORIARTY_HTTP_CACHE_DIR', dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'cache');
+}
+
 //define('MORIARTY_HTTP_CACHE_READ_ONLY', TRUE ); // always use a cached response if one exists
 define('MORIARTY_HTTP_CACHE_USE_STALE_ON_FAILURE', TRUE ); // use a cached respone if network fails
 
