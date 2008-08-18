@@ -107,7 +107,6 @@ class NewPropertyController extends k_Controller
       $orig_desc = $response->body;
       //$orig_desc->remove_property_values($uri, 'http://schemas.talis.com/2005/dir/schema#etag');
 
-      $store = new Store(STORE_URI, new Credentials(USER_NAME, USER_PWD));
       $res = new SimpleGraph();
       $res->add_resource_triple($uri, RDF_TYPE, RDF_PROPERTY);
       $res->add_literal_triple($uri, RDFS_LABEL, $params['label_en'], 'en');
@@ -165,6 +164,8 @@ class NewPropertyController extends k_Controller
       $cs = new ChangeSet( array('before_rdfxml' => $orig_desc, 'after_rdfxml' => $res->to_rdfxml(), 'subjectOfChange' => $uri, 'creatorName' => get_user(), 'changeReason' => $params['reason'], 'createdDate' => gmdate(DATE_W3C, time())) );
       
       if ( $cs->has_changes() ) {
+        
+        $store = new Store(STORE_URI, new Credentials(USER_NAME, USER_PWD));
         $mb = $store->get_metabox();
         $response = $mb->apply_versioned_changeset($cs);
 
