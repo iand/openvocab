@@ -53,7 +53,10 @@
 
       <div id="footer">
         <div class="gutter">
-          <p>Service provided by <a href="http://iandavis.com/">Ian Davis</a> using the <a href="http://www.talis.com/platform">Talis Platform</a>. All text and data are in the <a href="http://open.vocab.org.local/about/rights">Public Domain</a>.</p>
+          <p>Service provided by <a href="http://iandavis.com/">Ian Davis</a> using the <a href="http://www.talis.com/platform">Talis Platform</a>. Project hosting by <a href="http://code.google.com/p/openvocab/">Google Code</a><br />
+          All text and data are in the <a href="http://open.vocab.org.local/about/rights">Public Domain</a>.
+          
+          </p>
         </div>
       </div>
     </div>
