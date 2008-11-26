@@ -41,8 +41,8 @@ class Root extends k_Dispatcher
   }
 
   function GET() {
-    $params = Array('content' => $this->render("templates/home.tpl.php", array()) );
-    return $this->render("templates/root.tpl.php", $params);
+    $vars = Array('content' => $this->render("templates/home.tpl.php", array()) );
+    return $this->render("templates/root.tpl.php", $vars);
   }
 
   function HEAD() {
