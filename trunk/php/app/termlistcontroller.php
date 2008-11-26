@@ -14,7 +14,34 @@ class TermListController extends k_Controller
   function GET() {
     $vars = array( 'results' => null, 'q' => '' );
 
-    if (! empty($this->GET['q']) ) {
+    if ( empty($this->GET['q']) ) {
+
+    $terms_query =  "prefix cs: <http://purl.org/vocab/changeset/schema#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+select ?term ?label ?comment
+where {
+  {
+    ?term a rdf:Property ;
+          rdfs:label ?label .
+          optional { ?term rdfs:comment ?comment .}
+  }
+  union {
+    ?term a rdfs:Class ;
+          rdfs:label ?label .
+          optional { ?term rdfs:comment ?comment .}
+  }
+}
+order by desc(?date)
+";
+
+    $store = new Store(STORE_URI);
+    $sparql = $store->get_sparql_service();
+    $vars['terms'] = $sparql->select_to_array($terms_query);
+      
+      
+    }
+    else {
       $query = $this->GET['q'];
       $store = new Store(STORE_URI);
       $cb = $store->get_contentbox();

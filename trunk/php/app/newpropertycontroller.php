@@ -99,8 +99,12 @@ class NewPropertyController extends k_Controller
     }
 
     $store_ro = new Store(STORE_URI, null, true);
-    $mb = $store_ro->get_metabox();
-    $response = $mb->describe($uri);
+    //$mb = $store_ro->get_metabox();
+    //$response = $mb->describe($uri);
+
+    $sp = $store_ro->get_sparql_service();
+    $response = $sp->describe($uri);
+    
     $params['response'] = $response;
 
     if ($response->is_success()) {    
@@ -162,17 +166,18 @@ class NewPropertyController extends k_Controller
       }
 
       $cs = new ChangeSet( array('before_rdfxml' => $orig_desc, 'after_rdfxml' => $res->to_rdfxml(), 'subjectOfChange' => $uri, 'creatorName' => get_user(), 'changeReason' => $params['reason'], 'createdDate' => gmdate(DATE_W3C, time())) );
-      
+
       if ( $cs->has_changes() ) {
+
         
         $store = new Store(STORE_URI, new Credentials(USER_NAME, USER_PWD));
         $mb = $store->get_metabox();
-        $response = $mb->apply_versioned_changeset($cs);
-
+        $response = $mb->apply_changeset($cs);
         $params['response'] = $response;
         if ( $response->is_success()) {
           throw new k_http_Redirect( remote_to_local($uri) );
         }
+
       }
       else {
         throw new k_http_Redirect( remote_to_local($uri) );

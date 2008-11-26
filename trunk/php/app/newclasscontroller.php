@@ -151,12 +151,14 @@ class NewClassController extends k_Controller
       $cs = new ChangeSet( array('before_rdfxml' => $orig_desc, 'after_rdfxml' => $res->to_rdfxml(), 'subjectOfChange' => $uri, 'creatorName' => get_user(), 'changeReason' => $params['reason'], 'createdDate' => gmdate(DATE_W3C, time())) );
       if ( $cs->has_changes() ) {
         $mb = $store->get_metabox();
+
         $response = $mb->apply_versioned_changeset($cs);
 
         $params['response'] = $response;
         if ( $response->is_success()) {
           throw new k_http_Redirect( remote_to_local($uri) );
         }
+
       }
       else {
         throw new k_http_Redirect( remote_to_local($uri) );

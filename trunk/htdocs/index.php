@@ -7,7 +7,7 @@ define('OV_APP_DIR', dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'php'.DIRECT
 define('OV_LIB_DIR', dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR."lib".DIRECTORY_SEPARATOR);
 define('MORIARTY_DIR', OV_LIB_DIR . 'moriarty' . DIRECTORY_SEPARATOR);
 
-define('OV_ARC_DIR', OV_LIB_DIR . "arc_2008_05_30");
+define('OV_ARC_DIR', OV_LIB_DIR . "arc_2008_08_04");
 define('OV_KONSTRUKT_DIR', OV_LIB_DIR . "konstrukt" . DIRECTORY_SEPARATOR . "lib");
 define('MORIARTY_ARC_DIR', OV_ARC_DIR . DIRECTORY_SEPARATOR);
 define('MORIARTY_OPT_NO_ETAG', TRUE);
@@ -26,8 +26,8 @@ ini_set('include_path',
   .PATH_SEPARATOR.MORIARTY_DIR
 );
 
-require_once OV_LIB_DIR . DIRECTORY_SEPARATOR . 'httpclient' . DIRECTORY_SEPARATOR . 'http.php';
-require_once OV_LIB_DIR . DIRECTORY_SEPARATOR . 'sasl' . DIRECTORY_SEPARATOR . 'sasl.php';
+//require_once OV_LIB_DIR . DIRECTORY_SEPARATOR . 'httpclient' . DIRECTORY_SEPARATOR . 'http.php';
+//require_once OV_LIB_DIR . DIRECTORY_SEPARATOR . 'sasl' . DIRECTORY_SEPARATOR . 'sasl.php';
 require_once OV_APP_DIR . 'utility.func.php';
 
 // Loads Konstrukt global symbols
