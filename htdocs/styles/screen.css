@@ -25,3 +25,5 @@ table.form td { color: black; background: #F6FFF6; text-align:left; padding: 4px
 .summary {font-style: italic; }
 .terminfo {float: left; width:64%; margin:0; padding:0;}
 .box {float:right; width:30%; color: black; background: #F6FFF6; border:1px solid #5ABF5B; margin: 0; padding: 1%;  }
+.uri {color: #5ABF5B;}
+.title {font-size: 15px;}
