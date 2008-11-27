@@ -5,6 +5,7 @@ class Root extends k_Dispatcher
 
   public $map = Array(
     'terms' => 'Browse',
+    //'browse' => 'Browse',
     'create' => 'Create',
     'changes' => 'Recent Changes',
     'about' => 'About',
@@ -17,6 +18,9 @@ class Root extends k_Dispatcher
     }
     elseif ($name == 'terms') {
       $next = new TermListController($this, $name);
+    }
+    elseif ($name == 'browse') {
+      $next = new BrowseController($this, $name);
     }
     elseif ($name == 'forms') {
       $next = new FormsController($this, $name);

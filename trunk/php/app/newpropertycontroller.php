@@ -1,5 +1,6 @@
 <?php
 require_once 'constants.inc.php';
+require_once 'utility.func.php';
 require_once MORIARTY_DIR . 'store.class.php';
 require_once MORIARTY_DIR . 'changeset.class.php';
 require_once MORIARTY_DIR . 'credentials.class.php';
@@ -39,6 +40,52 @@ class NewPropertyController extends k_Controller
     if (isset($this->GET['subPropertyOf'])) {
       $params['subprop_1'] = $this->GET['subPropertyOf'];
     }
+    
+    
+$terms_query = "prefix cs: <http://purl.org/vocab/changeset/schema#>
+  prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+  prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+  prefix owl: <http://www.w3.org/2002/07/owl#>
+  construct {
+  ?p a rdf:Property .
+  ?c a owl:Class .
+  }
+  where {
+   {
+    ?p a rdf:Property .
+       
+   }
+   union 
+   {
+    ?c a owl:Class .
+   }
+  }";    
+
+    $store = new Store(STORE_URI);
+    $sparql = $store->get_sparql_service();
+    $terms = $sparql->construct_to_simple_graph($terms_query);  
+    $properties = array();
+    $classes = array();
+    $index = $terms->get_index();
+    foreach ($index as $s=>$p_list) {
+      foreach ($p_list as $p => $v_list) {
+        if ($p == RDF_TYPE) {
+          foreach ($v_list as $v_info) {
+            if ($v_info['type'] == 'uri') {
+              if ($v_info['value'] == RDF_PROPERTY) {
+                $properties[] = array('label' => make_qname($s), 'uri' => $s);                   
+              }
+              else if ($v_info['value'] == OWL_CLASS) {
+                $classes[] = array('label' => make_qname($s), 'uri' => $s);                   
+              }
+            }             
+          }
+        }
+      }
+    }  
+    
+    $params['properties'] = $properties;
+    $params['classes'] = $classes;
     return $this->render("templates/forms.newproperty.tpl.php", $params);
   }
 
