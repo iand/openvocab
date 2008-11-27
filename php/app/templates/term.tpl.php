@@ -21,7 +21,7 @@
 
 
 
-<h1><?php echo $prefix; ?>: <?php echo htmlspecialchars($this->description->get_first_literal($this->uri, RDFS_LABEL, '[unlabelled term]')); ?> (sp:<?php echo htmlspecialchars($this->name); ?>)</h1>
+<h1><?php echo $prefix; ?>: <?php echo htmlspecialchars($this->description->get_first_literal($this->uri, RDFS_LABEL, '[unlabelled term]')); ?> (ov:<?php echo htmlspecialchars($this->name); ?>)</h1>
 <div class="terminfo">
 <p><strong>Full URI</strong>: <a href="<?php echo htmlspecialchars(remote_to_local($this->uri)); ?>" class="uri"><?php echo htmlspecialchars($this->uri); ?></a></p>
 <p><strong>Status</strong>: <?php echo htmlspecialchars($this->description->get_first_literal($this->uri, 'http://www.w3.org/2003/06/sw-vocab-status/ns#term_status', '[unknown]')); ?> 
