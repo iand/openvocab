@@ -32,7 +32,7 @@ where {
           optional { ?term rdfs:comment ?comment .}
   }
 }
-order by desc(?date)
+order by ?label
 ";
 
     $store = new Store(STORE_URI);

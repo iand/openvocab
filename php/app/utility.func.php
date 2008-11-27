@@ -75,6 +75,16 @@ function make_formatted_qname($uri) {
   return $uri;
 }
 
+function make_qname($uri) {
+  global $prefixes;
+  if (preg_match('/^(.*[\/\#])([a-z0-9\-\_]+)$/i', $uri, $m)) {
+    if ( array_key_exists($m[1], $prefixes)) {
+      return $prefixes[$m[1]] . ':' . $m[2];
+    }  
+  }
+  return $uri;
+}
+
 
 function list_relations_prose(&$index, $uri, $property, $label, $use_definite_article = true) {
   if ( array_key_exists($uri, $index)) {
@@ -133,7 +143,7 @@ function list_form_fields($label, $name, $values) {
     echo '      <input type="text" class="text" size="60" name="' . $name . '_' . $i . '" id="' . $name . '_' . $i . '" value="' . htmlspecialchars($values[$i]) . '"/> <br />' . "\n";
   }
   echo '    <input type="text" class="text" size="60" name="' . $name . '_' . count($values) . '" id="' . $name . '_' . count($values) . '" value=""/>' . "\n";
-  echo ' <a href="#" id="' . $name . '_more" class="more">more</a>' . "\n";
+  echo ' <a href="#" id="' . $name . '_more" class="more">add another</a>' . "\n";
   echo '  </td>' . "\n";
   echo '</tr>' . "\n";
 }

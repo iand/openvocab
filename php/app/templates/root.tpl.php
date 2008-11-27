@@ -2,8 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <title><?php if (isset($this->document->page_title)) { e($this->document->page_title); } else { e("OpenVocab"); }?></title>
-    <link rel="stylesheet" href="/styles/screen.css" />
+    <link rel="stylesheet" type="text/css" href="/styles/screen.css" />
+    <link rel="stylesheet" type="text/css" href="/styles/jquery.autocomplete.css" />
     <script type="text/javascript" src="/js/jquery-1.2.4.min.js"></script>          
+    <script type='text/javascript' src='/js/jquery.autocomplete.js'></script>
     <script type="text/javascript" src="/js/pretty.js"></script>          
     <script type="text/javascript">                                         
      $(document).ready(function(){

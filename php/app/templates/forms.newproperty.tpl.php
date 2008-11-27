@@ -1,29 +1,142 @@
- <script lang="text/javascript">
+<script lang="text/javascript">
    // When the page is ready
 
     function create_textbox(event) {
       last_textbox = $(this).prevAll('input.text:first');
       last_id = last_textbox.attr('id');
-      prefix = last_id.substr($(this).attr('id').indexOf('_')+1);
-      new_id = last_id.substr(0,$(this).attr('id').indexOf('_')) + '_' + ++prefix;
+      suffix = last_id.substr($(this).attr('id').indexOf('_')+1);
+      prefix = last_id.substr(0,$(this).attr('id').indexOf('_'));
+      new_id = prefix + '_' + ++suffix;
       new_textbox = last_textbox.clone();
       new_textbox.attr('id', new_id);
       
       $(this).before('<br />').before(new_textbox);
-
+      if (prefix == 'domain' || prefix == 'range') {
+        $("#" + new_id).autocomplete(classes, autocomplete_config);
+      }
+      else {
+        $("#" + new_id).autocomplete(properties, autocomplete_config);
+      }
       // Stop the link click from doing its normal thing
       return false;
     }
+
+    
+
+    var classes = [
+ <?php
+      if (isset($classes)) {
+        foreach ($classes as $class_info) {
+          echo '      { label: "' . htmlspecialchars($class_info['label']) . '", uri: "' . htmlspecialchars($class_info['uri']) . '" },' . "\n";
+        }
+      }
+ ?>
+      { label: "foaf:Agent", uri: "http://xmlns.com/foaf/0.1/Agent" },
+      { label: "foaf:Document", uri: "http://xmlns.com/foaf/0.1/Document" },
+      { label: "foaf:Person", uri: "http://xmlns.com/foaf/0.1/Person" },
+      { label: "foaf:Image", uri: "http://xmlns.com/foaf/0.1/Image" },
+      { label: "foaf:OnlineAccount", uri: "http://xmlns.com/foaf/0.1/OnlineAccount" },
+      { label: "foaf:Organization", uri: "http://xmlns.com/foaf/0.1/Organization" },
+      { label: "foaf:Project", uri: "http://xmlns.com/foaf/0.1/Project" },
+      { label: "foaf:Group", uri: "http://xmlns.com/foaf/0.1/Group" },
+      { label: "rdfs:Literal", uri: "http://www.w3.org/2000/01/rdf-schema#Literal" },
+      { label: "geo:SpatialThing", uri: "http://www.w3.org/2003/01/geo/wgs84_pos#SpatialThing" },
+      { label: "sioc:Community", uri: "http://rdfs.org/sioc/ns#Community" },
+      { label: "sioc:Forum", uri: "http://rdfs.org/sioc/ns#Forum" },
+      { label: "sioc:Item", uri: "http://rdfs.org/sioc/ns#Item" },
+      { label: "sioc:Post", uri: "http://rdfs.org/sioc/ns#Post" },
+      { label: "sioc:Site", uri: "http://rdfs.org/sioc/ns#Site" },
+      { label: "sioc:User", uri: "http://rdfs.org/sioc/ns#User" },
+      { label: "skos:Concept", uri: "http://www.w3.org/2008/05/skos#Concept" },
+      { label: "bio:Event", uri: "http://purl.org/vocab/bio/0.1/Event" },
+      { label: "doap:Project", uri: "http://usefulinc.com/ns/doap#Project" },
+    ];
+
+    var properties = [
+ <?php
+      if (isset($properties)) {
+        foreach ($properties as $prop_info) {
+          echo '      { label: "' . htmlspecialchars($prop_info['label']) . '", uri: "' . htmlspecialchars($prop_info['uri']) . '" },' . "\n";
+        }
+      }
+ ?>
+      { label: "foaf:knows", uri: "http://xmlns.com/foaf/0.1/knows" },
+
+      { label: "rdfs:label", uri: "http://www.w3.org/2000/01/rdf-schema#label" },
+      { label: "rdfs:comment", uri: "http://www.w3.org/2000/01/rdf-schema#comment" },
+      { label: "rdfs:isDefinedBy", uri: "http://www.w3.org/2000/01/rdf-schema#isDefinedBy" },
+      { label: "rdfs:seeAlso", uri: "http://www.w3.org/2000/01/rdf-schema#seeAlso" },
+
+      { label: "foaf:isPrimaryTopicOf", uri: "http://xmlns.com/foaf/0.1/isPrimaryTopicOf" },
+      { label: "foaf:nick", uri: "http://xmlns.com/foaf/0.1/nick" },
+      { label: "foaf:name", uri: "http://xmlns.com/foaf/0.1/name" },
+      { label: "foaf:primaryTopic", uri: "http://xmlns.com/foaf/0.1/primaryTopic" },
+      { label: "foaf:topic", uri: "http://xmlns.com/foaf/0.1/topic" },
+      { label: "foaf:page", uri: "http://xmlns.com/foaf/0.1/page" },
+      { label: "foaf:img", uri: "http://xmlns.com/foaf/0.1/img" },
+      { label: "foaf:depiction", uri: "http://xmlns.com/foaf/0.1/depiction" },
+      { label: "foaf:depicts", uri: "http://xmlns.com/foaf/0.1/depicts" },
+      { label: "foaf:homepage", uri: "http://xmlns.com/foaf/0.1/homepage" },
+      { label: "foaf:weblog", uri: "http://xmlns.com/foaf/0.1/weblog" },
+      { label: "foaf:surname", uri: "http://xmlns.com/foaf/0.1/surname" },
+      { label: "foaf:givenname", uri: "http://xmlns.com/foaf/0.1/givenname" },
+      { label: "foaf:interest", uri: "http://xmlns.com/foaf/0.1/interest" },
+      { label: "foaf:made", uri: "http://xmlns.com/foaf/0.1/made" },
+      { label: "foaf:maker", uri: "http://xmlns.com/foaf/0.1/maker" },
+      { label: "foaf:based_near", uri: "http://xmlns.com/foaf/0.1/based_near" },
+      { label: "foaf:member", uri: "http://xmlns.com/foaf/0.1/member" },
+
+      { label: "dc:title", uri: "http://purl.org/dc/elements/1.1/title" },
+      { label: "dc:description", uri: "http://purl.org/dc/elements/1.1/description" },
+      { label: "dc:creator", uri: "http://purl.org/dc/elements/1.1/creator" },
+      { label: "dc:date", uri: "http://purl.org/dc/elements/1.1/date" },
+      { label: "dc:rights", uri: "http://purl.org/dc/elements/1.1/rights" },
+      { label: "dc:subject", uri: "http://purl.org/dc/elements/1.1/subject" },
+      { label: "skos:subject", uri: "http://www.w3.org/2004/02/skos/core#subject" },
+      { label: "skos:isSubjectOf", uri: "http://www.w3.org/2004/02/skos/core#isSubjectOf" },
+    ];
+
+
+
+
+    var autocomplete_config = {
+      minChars: 1,
+      width: 400,
+      matchContains: true,
+      autoFill: false,
+      formatItem: function(row, i, max) {
+        return row.label + " (" + row.uri + ")";
+      },
+      formatMatch: function(row, i, max) {
+        return row.label + " " + row.uri;
+      },
+      formatResult: function(row) {
+        return row.uri;
+      }
+    };
+    
    $(document).ready(function(){
     
      $(".more").click(create_textbox);
-     $("#label_en").keyup(function() {
+      
+      $("#label_en").keyup(function() {
         $(".example .label").html( $(this).val() );
       });
-
+      
      $("#plural_en").keyup(function() {
         $(".example .plural").html( $(this).val() );
       });  
+
+
+
+
+      $("#domain_0").autocomplete(classes, autocomplete_config);
+      $("#range_0").autocomplete(classes, autocomplete_config);
+      $("#subprop_0").autocomplete(properties, autocomplete_config);
+      $("#inverse_0").autocomplete(properties, autocomplete_config);
+      $("#equivalent_0").autocomplete(properties, autocomplete_config);
+
+
    });
    
 
@@ -50,7 +163,7 @@
       
 
       if ( $response ) {
-        if ( ! $response->is_success()) {
+        if ( ! $response->is_success() ) {
           echo '<p class="error">There was a problem saving your changes: ' . htmlspecialchars($response->body) . '</p>';
 
           echo '<p>The HTTP request sent was:</p>';
@@ -70,7 +183,7 @@
           <?php
             if ($mode == 'new') {
           ?>      
-          <td valign="top" class="first">http://open.vocab.org/terms/<input type="text" class="text" name="slug" id="slug" value="<?php echo htmlspecialchars($slug); ?>"/><br /><span class="hint">Last segment of URI must be mixed case, must start with a lowercase letter, contain only letters, numbers and hyphen</span></td>
+          <td valign="top" class="first">http://open.vocab.org/terms/<input type="text" class="text" name="slug" id="slug" value="<?php echo htmlspecialchars($slug); ?>"/><span class="hint">(Take care: you cannot edit this after you save)</span><br /><span class="hint">Last segment of URI must be mixed case, must start with a lowercase letter, contain only letters, numbers and hyphen</span></td>
           <?
             } else {
           ?>
@@ -125,8 +238,8 @@
         </tr>
 
         <?php 
-          list_form_fields('Range', 'range', $range); 
           list_form_fields('Domain', 'domain', $domain); 
+          list_form_fields('Range', 'range', $range); 
           list_form_fields('Sub-property of', 'subprop', $subprop); 
           list_form_fields('Inverse of', 'inverse', $inverse); 
           list_form_fields('Equivalent to', 'equivalent', $equivalent); 
