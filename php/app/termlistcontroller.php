@@ -19,6 +19,7 @@ class TermListController extends k_Controller
       $terms_query =  "prefix cs: <http://purl.org/vocab/changeset/schema#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
 select ?term ?label ?comment
 where {
   {
@@ -27,7 +28,7 @@ where {
           optional { ?term rdfs:comment ?comment .}
   }
   union {
-    ?term a rdfs:Class ;
+    ?term a owl:Class ;
           rdfs:label ?label .
           optional { ?term rdfs:comment ?comment .}
   }
