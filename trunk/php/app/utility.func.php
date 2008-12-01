@@ -147,3 +147,26 @@ function list_form_fields($label, $name, $values) {
   echo '  </td>' . "\n";
   echo '</tr>' . "\n";
 }
+
+function guess_output_type($accept) {
+
+  $guessed_output = 'rdf';
+
+  if ( preg_match("~application/rdf\+xml~i", $accept) ) {
+    $guessed_output = 'rdf';
+  }
+  elseif ( preg_match("~text/html~i", $accept) ) {
+    $guessed_output = 'html';
+  }
+  elseif ( preg_match("~application/xml~i", $accept) ) {
+    $guessed_output = 'xml';
+  }
+  elseif ( preg_match("~application/json~i", $accept) ) {
+    $guessed_output = 'json';
+  }
+  elseif ( preg_match("~text/plain~i", $accept) ) {
+    $guessed_output = 'turtle';
+  }   
+  
+  return $guessed_output;
+}

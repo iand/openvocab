@@ -91,24 +91,7 @@ class TermController extends k_Controller
     $store = new Store(STORE_URI);
     $mb = $store->get_metabox();
     if ($mb->has_description($term_uri)) {
-      $guessed_output = 'rdf';
-
-      if ( preg_match("~application/rdf\+xml~i", $_SERVER["HTTP_ACCEPT"]) ) {
-        $guessed_output = 'rdf';
-      }
-      elseif ( preg_match("~text/html~i", $_SERVER["HTTP_ACCEPT"]) ) {
-        $guessed_output = 'html';
-      }
-      elseif ( preg_match("~application/xml~i", $_SERVER["HTTP_ACCEPT"]) ) {
-        $guessed_output = 'xml';
-      }
-      elseif ( preg_match("~application/json~i", $_SERVER["HTTP_ACCEPT"]) ) {
-        $guessed_output = 'json';
-      }
-      elseif ( preg_match("~text/plain~i", $_SERVER["HTTP_ACCEPT"]) ) {
-        $guessed_output = 'turtle';
-      }   
-
+      $guessed_output = guess_output_type($_SERVER["HTTP_ACCEPT"]);
       throw new k_http_Redirect($this->url() . '/' . $guessed_output);
     }
   }

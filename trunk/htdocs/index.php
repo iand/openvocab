@@ -1,8 +1,8 @@
 <?php
-require_once 'localconfig.inc.php';
+require_once 'localconfig.inc.php'; // defines the STORE_URI, USER_NAME and USER_PWD constants
 
 define('SP_MARKDOWNDESCRIPTION', 'http://open.vocab.org/terms/markdownDescription');
-
+define('VOCAB_NS', 'http://open.vocab.org/terms/');
 define('OV_APP_DIR', dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR."app".DIRECTORY_SEPARATOR);
 define('OV_LIB_DIR', dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR."lib".DIRECTORY_SEPARATOR);
 define('MORIARTY_DIR', OV_LIB_DIR . 'moriarty' . DIRECTORY_SEPARATOR);
