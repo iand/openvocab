@@ -162,7 +162,8 @@ $terms_query = "prefix cs: <http://purl.org/vocab/changeset/schema#>
       $res->add_resource_triple($uri, RDF_TYPE, RDF_PROPERTY);
       $res->add_literal_triple($uri, RDFS_LABEL, $params['label_en'], 'en');
       $res->add_literal_triple($uri, 'http://www.w3.org/2003/06/sw-vocab-status/ns#term_status', 'unstable');
-      $res->add_resource_triple($uri, 'http://www.w3.org/2003/06/sw-vocab-status/ns#userdocs', $uri . '/html');
+      $res->add_resource_triple($uri, 'http://www.w3.org/2003/06/sw-vocab-status/ns#userdocs', $uri . '.html');
+      $res->add_resource_triple($uri, RDFS_ISDEFINEDBY, VOCAB_SCHEMA);
       
       if ( $params['functional'] ) {
         $res->add_resource_triple($uri, RDF_TYPE, OWL_FUNCTIONALPROPERTY);

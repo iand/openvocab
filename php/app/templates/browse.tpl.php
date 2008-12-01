@@ -2,7 +2,7 @@
 if (isset($terms)) {
   echo '<h1>Browse OpenVocab</h1>';
 }
-?>
+/*
 
     <div id="gearspace" style="float:left;">
       <strong>You need to upgrade your Flash Player</strong>
@@ -22,3 +22,8 @@ if (isset($terms)) {
     
       // ]]>
     </script>
+*/
+
+
+
+?>
