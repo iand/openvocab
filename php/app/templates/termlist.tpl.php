@@ -10,7 +10,7 @@ if (isset($terms)) {
           echo '<div class="title"><a href="' . remote_to_local($term['term']['value']) . '">' . htmlspecialchars($term['label']['value']) . '</a></div>';
         }
         else {
-          echo '<div class="title"><a href="' . remote_to_local($term['term']['value']) . '">(unlabelled term)</a></div>';
+          echo '<div class="title"><a href="' . remote_to_local($term['term']['value']) . '">' . make_qname($term['term']['value']) . '</a></div>';
         }
         if ( isset($term['comment'])) {
           echo '<div class="comment">' . htmlspecialchars($term['comment']['value']) . '</div>';

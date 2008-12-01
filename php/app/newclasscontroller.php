@@ -102,7 +102,7 @@ class NewClassController extends k_Controller
       $uri = $params['uri'];
     }
     else {
-      $uri = 'http://open.vocab.org/terms/' . $params['slug'];
+      $uri = VOCAB_NS . $params['slug'];
     }
 
     $store_ro = new Store(STORE_URI, null, true);

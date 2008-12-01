@@ -183,7 +183,7 @@
           <?php
             if ($mode == 'new') {
           ?>      
-          <td valign="top" class="first">http://open.vocab.org/terms/<input type="text" class="text" name="slug" id="slug" value="<?php echo htmlspecialchars($slug); ?>"/><span class="hint">(Take care: you cannot edit this after you save)</span><br /><span class="hint">Last segment of URI must be mixed case, must start with a lowercase letter, contain only letters, numbers and hyphen</span></td>
+          <td valign="top" class="first"><? echo(VOCAB_NS); ?><input type="text" class="text" name="slug" id="slug" value="<?php echo htmlspecialchars($slug); ?>"/><span class="hint">(Take care: you cannot edit this after you save)</span><br /><span class="hint">Last segment of URI must be mixed case, must start with a lowercase letter, contain only letters, numbers and hyphen</span></td>
           <?
             } else {
           ?>

@@ -142,7 +142,7 @@ $terms_query = "prefix cs: <http://purl.org/vocab/changeset/schema#>
       $uri = $params['uri'];
     }
     else {
-      $uri = 'http://open.vocab.org/terms/' . $params['slug'];
+      $uri = VOCAB_NS . $params['slug'];
     }
 
     $store_ro = new Store(STORE_URI, null, true);
@@ -219,7 +219,7 @@ $terms_query = "prefix cs: <http://purl.org/vocab/changeset/schema#>
         
         $store = new Store(STORE_URI, new Credentials(USER_NAME, USER_PWD));
         $mb = $store->get_metabox();
-        $response = $mb->apply_changeset($cs);
+        $response = $mb->apply_versioned_changeset($cs);
         $params['response'] = $response;
         if ( $response->is_success()) {
           throw new k_http_Redirect( remote_to_local($uri) );

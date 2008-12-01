@@ -16,7 +16,7 @@ class TermListController extends k_Controller
 
     if ( empty($this->GET['q']) ) {
 
-    $terms_query =  "prefix cs: <http://purl.org/vocab/changeset/schema#>
+      $terms_query =  "prefix cs: <http://purl.org/vocab/changeset/schema#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 select ?term ?label ?comment
@@ -35,11 +35,9 @@ where {
 order by ?label
 ";
 
-    $store = new Store(STORE_URI);
-    $sparql = $store->get_sparql_service();
-    $vars['terms'] = $sparql->select_to_array($terms_query);
-      
-      
+      $store = new Store(STORE_URI);
+      $sparql = $store->get_sparql_service();
+      $vars['terms'] = $sparql->select_to_array($terms_query);
     }
     else {
       $query = $this->GET['q'];
