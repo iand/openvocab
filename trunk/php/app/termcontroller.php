@@ -5,8 +5,7 @@ require_once MORIARTY_DIR . 'sparqlservice.class.php';
 
 class TermController extends k_Controller
 {
-  function get_description() {
-    $term_uri = local_to_remote($this->url());
+  function get_description($term_uri) {
     $store = new Store(STORE_URI);
     $mb = $store->get_metabox();
     $desc_response = $mb->describe($term_uri, 'json');
@@ -35,34 +34,45 @@ class TermController extends k_Controller
     throw $response;
   }
 
-  function forward($name) {
-    $this->uri =  local_to_remote($this->url());
+  function GET() {
+    $term_uri =  local_to_remote($this->url());
+    $format = null;
+    
+    if (preg_match('~^(.+)\.(html|rdf|xml|turtle|json)$~', $term_uri, $m)) {
+      $term_uri = $m[1];
+      $format = $m[2];
+    }    
+    
     $store = new Store(STORE_URI);
     $mb = $store->get_metabox();
-    if ($mb->has_description($this->uri)) {
-  
-      if ($name == 'rdf') {
-        $desc = $this->get_description();
+    if ($mb->has_description($term_uri)) {
+      if ($format == null) {  
+        $guessed_output = guess_output_type($_SERVER["HTTP_ACCEPT"]);
+        throw new k_http_Redirect($this->url() . '.' . $guessed_output);
+      }
+      else if ($format == 'rdf') {
+        $desc = $this->get_description($term_uri);
         $this->generate_response("application/rdf+xml", $desc->to_rdfxml() );
       }
-      else if ($name == 'turtle') {
-        $desc = $this->get_description();
+      else if ($format == 'turtle') {
+        $desc = $this->get_description($term_uri);
         $this->generate_response("text/plain", $desc->to_turtle() );
       }
-      else if ($name == 'json') {
-        $desc = $this->get_description();
+      else if ($format == 'json') {
+        $desc = $this->get_description($term_uri);
         $this->generate_response("application/json", $desc->to_json() );
       }
-      else if ($name == 'xml') {
-        $desc = $this->get_description();
+      else if ($format == 'xml') {
+        $desc = $this->get_description($term_uri);
         $this->generate_response("application/xml", $desc->to_rdfxml() );
       }
-      else if ($name == 'html') {
-        $this->description = $this->get_description();
+      else if ($format == 'html') {
+        $this->description = $this->get_description($term_uri);
+        $this->uri = $term_uri;
         $cs_query =  "prefix cs: <http://purl.org/vocab/changeset/schema#>
                       select ?cs ?creator ?date ?reason
                       where {
-                        ?cs cs:subjectOfChange <" . $this->uri . "> ;
+                        ?cs cs:subjectOfChange <" . $term_uri . "> ;
                         cs:creatorName ?creator ;
                         cs:createdDate ?date ;
                         cs:changeReason ?reason .
@@ -82,17 +92,7 @@ class TermController extends k_Controller
         $response->setContent("<html><head><title>404 Not Found</title></head><body><h1>404 Not Found</h1></body></html>");
         throw $response;
       }     
-    }
-
-  }
-
-  function GET() {
-    $term_uri =  local_to_remote($this->url());
-    $store = new Store(STORE_URI);
-    $mb = $store->get_metabox();
-    if ($mb->has_description($term_uri)) {
-      $guessed_output = guess_output_type($_SERVER["HTTP_ACCEPT"]);
-      throw new k_http_Redirect($this->url() . '/' . $guessed_output);
+      
     }
   }
 }

@@ -16,7 +16,7 @@ class Root extends k_Dispatcher
     if ($name == 'changes') {
       $next = new RecentChangesController($this, $name);
     }
-    elseif ($name == 'terms') {
+    elseif (preg_match('~^terms~', $name)) {
       $next = new TermListController($this, $name);
     }
     elseif ($name == 'browse') {

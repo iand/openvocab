@@ -126,4 +126,4 @@
 
 <h2 style="clear:both;">RDF</h2>
 <pre><?php echo htmlspecialchars($this->description->to_turtle()); ?></pre>
-<p>This description in other formats: <a href="./rdf">RDF/XML</a>, <a href="./turtle">Turtle</a>, <a href="./json">RDF/JSON</a></p>
+<p>This description in other formats: <a href="<?php echo(htmlspecialchars(remote_to_local($this->uri))); ?>.rdf">RDF/XML</a>, <a href="<?php echo(htmlspecialchars(remote_to_local($this->uri))); ?>.turtle">Turtle</a>, <a href="<?php echo(htmlspecialchars(remote_to_local($this->uri))); ?>.json">RDF/JSON</a></p>
