@@ -70,19 +70,23 @@ prefix owl: <http://www.w3.org/2002/07/owl#>
 describe <" . htmlspecialchars(VOCAB_SCHEMA) . "> ?term
 where {
   {
-    ?term a rdf:Property .
-  }
-  union {
-    ?term a owl:Class .
+    ?term rdfs:isDefinedBy  <" . htmlspecialchars(VOCAB_SCHEMA) . "> .
   }
 }
-order by ?label
 ";
         $response = $sparql->graph($terms_query);
         if ($response->is_success()) {
           $desc = new SimpleGraph();
-          $desc->from_rdfxml( $response->body );
-
+          $desc->add_resource_triple( VOCAB_SCHEMA, RDF_TYPE, 'http://www.w3.org/2002/07/owl#Ontology');
+          $desc->add_literal_triple( VOCAB_SCHEMA, RDFS_LABEL, 'OpenVocab');
+          $desc->add_literal_triple( VOCAB_SCHEMA, RDFS_COMMENT, 'OpenVocab is a project that enables anyone to participate in the creation of a open and shared RDF vocabulary. The project uses wiki principles to allow properties and classes to be created in the vocabulary.');
+          $desc->add_literal_triple( VOCAB_SCHEMA, 'http://purl.org/vocab/vann/preferredNamespaceUri', VOCAB_NS);
+          $desc->add_literal_triple( VOCAB_SCHEMA, 'http://purl.org/vocab/vann/preferredNamespacePrefix', 'ov');
+          $desc->add_literal_triple( VOCAB_SCHEMA, 'http://purl.org/dc/elements/1.1/rights', 'All text and data in this schema are in the Public Domain.');
+          $desc->add_rdfxml( $response->body );
+          
+          
+          
           if ($format == 'rdf') {
             $this->generate_response("application/rdf+xml", $desc->to_rdfxml() );
           }
