@@ -36,7 +36,7 @@ table.form th { <?php echo($standard)?>; text-align:left; padding: 4px; border-t
 table.form th.first { <?php echo($standard)?>; text-align:left; padding: 4px; border-top: 0px;}
 table.form td { <?php echo($pale)?>; text-align:left; padding: 4px; border: 1px solid #F6FFF6;}
 .summary {font-style: italic; }
-.box {width: 20em; background: url(/images/box-bl.gif) no-repeat left bottom;}
+.box {width: 20em; background: url(/images/box-bl.gif) no-repeat left bottom; }
 .box-outer {background: url(/images/box-br.gif) no-repeat right bottom; padding-bottom:5%; }
 .box-inner {background: url(/images/box-tl.gif) no-repeat left top;  }
 .box h2 {background: url(/images/box-tr.gif) no-repeat right top; padding-top:5%; }
