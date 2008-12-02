@@ -210,7 +210,7 @@
             <br />
             <span class="hint">Would your plural label fit into the following sentences:</span>
             <br />
-            <span class="hint example">"the <em class="plural"><?php echo htmlspecialchars($plural_en); ?></em> of thing are foo and bar" or "foo and bar have <em class="plural"><?php echo htmlspecialchars($plural_en); ?></em> foo"</span> </span>
+            <span class="hint example">"the <em class="plural"><?php echo htmlspecialchars($plural_en); ?></em> of thing are foo and bar" or "foo and bar are <em class="plural"><?php echo htmlspecialchars($plural_en); ?></em> of foo"</span> </span>
           
           </td>
         </tr>

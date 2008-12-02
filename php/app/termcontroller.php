@@ -14,6 +14,7 @@ class TermController extends k_Controller
       $desc->from_json($desc_response->body);    
       $desc->remove_property_values($term_uri, 'http://schemas.talis.com/2005/dir/schema#etag');
       $desc->set_namespace_mapping('ov', 'http://open.vocab.org/terms/');
+      $desc->set_namespace_mapping('o', 'http://open.vocab.org/');
       $desc->set_namespace_mapping('status', 'http://www.w3.org/2003/06/sw-vocab-status/ns#');
       $desc->set_namespace_mapping('label', 'http://purl.org/net/vocab/2004/03/label#');      
       return $desc;
