@@ -24,13 +24,15 @@
 <h1><?php echo $prefix; ?>: <?php echo htmlspecialchars($this->description->get_first_literal($this->uri, RDFS_LABEL, '[unlabelled term]')); ?> (ov:<?php echo htmlspecialchars($this->name); ?>)</h1>
 <div class="terminfo">
 <p><strong>Full URI</strong>: <a href="<?php echo htmlspecialchars(remote_to_local($this->uri)); ?>" class="uri"><?php echo htmlspecialchars($this->uri); ?></a></p>
-<p><strong>Status</strong>: <?php echo htmlspecialchars($this->description->get_first_literal($this->uri, 'http://www.w3.org/2003/06/sw-vocab-status/ns#term_status', '[unknown]')); ?> 
-(unstable terms may be edited anytime by anyone so their meaning may change unpredictably)
-</p>
 
+<?php if ( $this->description->subject_has_property( $this->uri, RDFS_COMMENT ) ) { ?>
 <p class="comment"><?php echo htmlspecialchars($this->description->get_first_literal($this->uri, RDFS_COMMENT, 'No available comment')); ?></p>
+<?php } ?>
 
+<?php if ( $this->description->subject_has_property( $this->uri, SP_MARKDOWNDESCRIPTION ) ) { ?>
 <p class="description"><?php echo $parser->transform($this->description->get_first_literal($this->uri, SP_MARKDOWNDESCRIPTION, 'No available description')); ?></p>
+<?php } ?>
+
 <?php
   if ($is_property) {
     $characteristics = array();
@@ -112,17 +114,19 @@
       }
     
   if ( isset($history)) {
-    echo '<h2>Change History</h2>';
+    echo '<h2>Change History</h2><ul>';
     foreach ($history as $item) {
-      echo '<div class="change reason">' . htmlspecialchars($item['reason']['value'])  . '</div>';
-      echo '<div class="change meta">';
+      echo '<li class="change">';
       $date = strtotime($item['date']['value']);
-      echo '<span class="date">' . htmlspecialchars($item['date']['value']) . '</span> by ' . htmlspecialchars($item['creator']['value']);
-      echo '</div>';
+      echo '<span class="date">' . htmlspecialchars($item['date']['value']) . '</span> ' . htmlspecialchars($item['creator']['value']) . ' said "' .  htmlspecialchars($item['reason']['value']) . '"';
+      echo '</li>';
     }
+    echo '</ul>';
   }
-    echo '</div>';
-?>
+?>    
+      <p>This term is considered to be <strong><?php echo htmlspecialchars($this->description->get_first_literal($this->uri, 'http://www.w3.org/2003/06/sw-vocab-status/ns#term_status', '[unknown]')); ?></strong>. Unstable terms may be edited at any time by anyone so their meaning may change unpredictably.</p>
+    </div>
+
 
 <h2 style="clear:both;">RDF</h2>
 <pre><?php echo htmlspecialchars($this->description->to_turtle()); ?></pre>
