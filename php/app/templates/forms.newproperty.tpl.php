@@ -220,10 +220,6 @@
           <td valign="top"><textarea rows="4" cols="80" name="comment_en" id="comment_en"><?php echo htmlspecialchars($comment_en); ?></textarea></td>
         </tr>
         <tr>
-          <th valign="top"><label for="description_en">Formatted description<br/>(in English): </label></th>
-          <td valign="top"><textarea rows="10" cols="80" name="description_en" id="description_en"><?php echo htmlspecialchars($description_en); ?></textarea><br /><span class="hint">You can use <a href="http://daringfireball.net/projects/markdown/syntax">markdown syntax</a> to format this description</span></td>
-        </tr>
-        <tr>
           <th valign="top"><label for="type">Value Type: </label></th>
           <td valign="top"><select name="type" id="type"><option>(any)</option><option>Datatype Property</option><option>Object Property</option></select></td>
         </tr>
@@ -246,6 +242,10 @@
         ?>
 
 
+        <tr>
+          <th valign="top"><label for="description_en">Notes on usage:<br/>(in English): </label></th>
+          <td valign="top"><textarea rows="10" cols="80" name="description_en" id="description_en"><?php echo htmlspecialchars($description_en); ?></textarea><br /><span class="hint">You can use <a href="http://daringfireball.net/projects/markdown/syntax">markdown syntax</a> to format this description</span></td>
+        </tr>
 
 
       </table>

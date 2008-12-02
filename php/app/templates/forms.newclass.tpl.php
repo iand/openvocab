@@ -122,16 +122,16 @@
           <th valign="top"><label for="comment_en">Plain text description <br/>(in English): </label></th>
           <td valign="top"><textarea rows="4" cols="80" name="comment_en" id="comment_en"><?php echo htmlspecialchars($comment_en); ?></textarea></td>
         </tr>
-        <tr>
-          <th valign="top"><label for="description_en">Formatted description<br/>(in English): </label></th>
-          <td valign="top"><textarea rows="10" cols="80" name="description_en" id="description_en"><?php echo htmlspecialchars($description_en); ?></textarea><br /><span class="hint">You can use <a href="http://daringfireball.net/projects/markdown/syntax">markdown syntax</a> to format this description</span></td>
-        </tr>
 
         <?php 
           list_form_fields('Sub-class of', 'subclass', $subclass); 
           list_form_fields('Disjoint with', 'disjoint', $disjoint); 
           list_form_fields('Equivalent to', 'equivalent', $equivalent); 
         ?>
+        <tr>
+          <th valign="top"><label for="description_en">Notes on usage:<br/>(in English): </label></th>
+          <td valign="top"><textarea rows="10" cols="80" name="description_en" id="description_en"><?php echo htmlspecialchars($description_en); ?></textarea><br /><span class="hint">You can use <a href="http://daringfireball.net/projects/markdown/syntax">markdown syntax</a> to format this description</span></td>
+        </tr>
       </table>
 
 
