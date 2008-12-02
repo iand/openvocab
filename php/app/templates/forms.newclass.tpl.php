@@ -107,7 +107,7 @@
           <th valign="top"><label for="label_en">Singular label (in English): </label></th>
           <td valign="top"><input type="text" class="text" size="60" name="label_en" id="label_en" value="<?php echo htmlspecialchars($label_en); ?>"/>
             <br />
-            <span class="hint">Would your singular label fit into the following sentence: <span class="example">"foo is a<em class="label"><?php echo " " . htmlspecialchars($label_en); ?></em>"</span></span>
+            <span class="hint">Capitalise this label using title case, as though it was being used as a heading in a table. Would your singular label fit into the following sentence: <span class="example">"foo is a<em class="label"><?php echo " " . htmlspecialchars($label_en); ?></em>"</span></span>
           </td>
         </tr>
         <tr>
