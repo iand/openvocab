@@ -15,10 +15,10 @@ more.</p>
 
 <p>You can obtain different representations of a term's definition 
 using URI's like these:</p>
-<p><code><? echo(VOCAB_NS); ?>{termname}/html</code></p>
-<p><code><? echo(VOCAB_NS); ?>{termname}/rdf</code></p>
-<p><code><? echo(VOCAB_NS); ?>{termname}/turtle</code></p>
-<p><code><? echo(VOCAB_NS); ?>{termname}/json</code></p>
+<p><code><? echo(VOCAB_NS); ?>{termname}.html</code></p>
+<p><code><? echo(VOCAB_NS); ?>{termname}.rdf</code></p>
+<p><code><? echo(VOCAB_NS); ?>{termname}.turtle</code></p>
+<p><code><? echo(VOCAB_NS); ?>{termname}.json</code></p>
 
 <p>All data and content hosted by OpenVocab is gifted to the public 
 domain and may be used for any purpose whatsoever. </p>
