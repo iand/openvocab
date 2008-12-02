@@ -53,3 +53,4 @@ if (isset($results)) {
 }
 
 ?>
+<p>This page in other formats: <a href="<?php echo(htmlspecialchars(remote_to_local(VOCAB_SCHEMA))); ?>.rdf">RDF/XML</a>, <a href="<?php echo(htmlspecialchars(remote_to_local(VOCAB_SCHEMA))); ?>.turtle">Turtle</a>, <a href="<?php echo(htmlspecialchars(remote_to_local(VOCAB_SCHEMA))); ?>.json">RDF/JSON</a></p>
