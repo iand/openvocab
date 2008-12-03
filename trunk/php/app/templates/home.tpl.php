@@ -22,3 +22,5 @@ using URI's like these:</p>
 
 <p>All data and content hosted by OpenVocab is gifted to the public 
 domain and may be used for any purpose whatsoever. </p>
+
+<p>Read the <a href="http://iandavis.com/blog/2008/12/introducing-openvocab">blog post</a> introducing OpenVocab</p>
