@@ -37,44 +37,41 @@ class BrowseRelationsController extends k_Controller
       $edges = array();
       $index = $terms->get_index();
       
-      $count = 0;
       foreach ($index as $s=>$p_list) {
-        if ($count++ < 30) {
-          $property_domains = array();
-          $property_ranges = array();
-          
-          foreach ($p_list as $p => $v_list) {
-            if ($p == RDFS_RANGE) {
-              foreach ($v_list as $v_info) {
-                if ($v_info['type'] == 'uri') {
-                  if (!array_key_exists($v_info['value'], $node_index)) {
-                    $node_index[$v_info['value']] = 'n' . count($node_index); 
-                    $graph->addNode($node_index[$v_info['value']], array('label' => make_qname($v_info['value'])));
-                  }
-                  $property_ranges[] = $node_index[$v_info['value']];                
-                } 
-              }
-            }
-            if ($p == RDFS_DOMAIN) {
-              foreach ($v_list as $v_info) {
-                if ($v_info['type'] == 'uri') {
-                  if (!array_key_exists($v_info['value'], $node_index)) {
-                    $node_index[$v_info['value']] = 'n' . count($node_index); 
-                    $graph->addNode($node_index[$v_info['value']], array('label' => make_qname($v_info['value'])));
-                  }
-                  $property_domains[] = $node_index[$v_info['value']];                
-                } 
-              }
+        $property_domains = array();
+        $property_ranges = array();
+        
+        foreach ($p_list as $p => $v_list) {
+          if ($p == RDFS_RANGE) {
+            foreach ($v_list as $v_info) {
+              if ($v_info['type'] == 'uri') {
+                if (!array_key_exists($v_info['value'], $node_index)) {
+                  $node_index[$v_info['value']] = 'n' . count($node_index); 
+                  $graph->addNode($node_index[$v_info['value']], array('label' => make_qname($v_info['value'])));
+                }
+                $property_ranges[] = $node_index[$v_info['value']];                
+              } 
             }
           }
-          
-          foreach ($property_domains as $domain) {
-            foreach ($property_ranges as $range) {
-              $graph->addEdge(array($domain => $range), array('label' => make_qname($s)));
+          if ($p == RDFS_DOMAIN) {
+            foreach ($v_list as $v_info) {
+              if ($v_info['type'] == 'uri') {
+                if (!array_key_exists($v_info['value'], $node_index)) {
+                  $node_index[$v_info['value']] = 'n' . count($node_index); 
+                  $graph->addNode($node_index[$v_info['value']], array('label' => make_qname($v_info['value'])));
+                }
+                $property_domains[] = $node_index[$v_info['value']];                
+              } 
             }
           }
-          
         }
+        
+        foreach ($property_domains as $domain) {
+          foreach ($property_ranges as $range) {
+            $graph->addEdge(array($domain => $range), array('label' => make_qname($s)));
+          }
+        }
+        
       }
   
 
