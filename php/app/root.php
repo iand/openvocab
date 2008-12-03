@@ -5,7 +5,7 @@ class Root extends k_Dispatcher
 
   public $map = Array(
     'terms' => 'Terms',
-    'browse/relations' => 'Browse',
+    'browse' => 'Browse',
     'create' => 'Create',
     'changes' => 'Recent Changes',
     'about' => 'About',

@@ -12,6 +12,12 @@ class BrowseController extends k_Controller
     if ($name == 'relations') {
       $next = new BrowseRelationsController($this, $name);
     }
+    else if ($name == 'subprop') {
+      $next = new BrowseSubPropertyController($this, $name);
+    }    
+    else if ($name == 'subclass') {
+      $next = new BrowseSubClassController($this, $name);
+    }    
     
     if (isset($next)) {
       return $next->handleRequest();
