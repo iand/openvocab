@@ -15,6 +15,7 @@ abstract class RDFController extends Controller {
     $this->output->enable_profiler(TRUE);
 
     $this->load->library('session');
+    $this->load->helper('local_link');
 
     $this_host = $this->input->server("HTTP_HOST");
     $path = $this->uri->uri_string();

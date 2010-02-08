@@ -4,23 +4,14 @@
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    
-    <?php      
-      function local_link($uri) {
-        if (preg_match('~^http://[a-zA-Z0-9-\.]+(.*)$~', $uri, $m)) {
-          return $m[1];
-        }
-        else {
-          return $uri;
-        }
-      }
 
+    <?php
       echo '<title>Terms in the ' . htmlspecialchars(config_item('vocab_name')) . ' RDF schema</title>' . "\n";
-      
+
       $desc = '';
       if ($model->comment) $desc .= 'Definition: ' . $model->comment;
-        
-      
+
+
       if ($desc) {
         echo '<meta name="description" content="' . htmlspecialchars($desc) . '" />' . "\n";
       }
@@ -30,15 +21,8 @@
     <link rel="stylesheet" href="/css/blueprint/screen.css" type="text/css" media="screen, projection">
     <link rel="stylesheet" href="/css/blueprint/print.css" type="text/css" media="print">
     <!--[if lt IE 8]><link rel="stylesheet" href="/css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
-
-    <style type="text/css">
-      .alt { 
-        color: #666; 
-        font-family: "Warnock Pro", "Goudy Old Style","Palatino","Book Antiqua", Georgia, serif; 
-        font-style: italic;
-        font-weight: normal;
-      }    
-    </style>
+    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection">
+    <?php if(isset($js)) echo $js; ?>
 
 <?php
   if (isset($links)) {
@@ -46,7 +30,7 @@
       echo '    <link rel="alternate" type="' . htmlspecialchars($link['type']) . '" href="' . htmlspecialchars($link['href']) . '" title="' . htmlspecialchars($link['title']) . '">' . "\n";
     }
   }
-?>       
+?>
   </head>
   <body>
     <div class="container">
@@ -54,7 +38,7 @@
     <h2 class="bottom">Terms</h2>
     <hr>
       <div class="span-24">
-      
+
       <p>The following classes and properties have been defined as part of the <?= htmlspecialchars(config_item('vocab_name')); ?> RDF schema:</p>
       </div>
       <div class="span-11 colborder">

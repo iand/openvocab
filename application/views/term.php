@@ -25,15 +25,8 @@
     <link rel="stylesheet" href="/css/blueprint/screen.css" type="text/css" media="screen, projection">
     <link rel="stylesheet" href="/css/blueprint/print.css" type="text/css" media="print">
     <!--[if lt IE 8]><link rel="stylesheet" href="/css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
-
-    <style type="text/css">
-      .alt {
-        color: #666;
-        font-family: "Warnock Pro", "Goudy Old Style","Palatino","Book Antiqua", Georgia, serif;
-        font-style: italic;
-        font-weight: normal;
-      }
-    </style>
+    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection">
+    <?php if(isset($js)) echo $js; ?>
 
 <?php
   if (isset($links)) {
@@ -158,13 +151,13 @@
           echo '<div class="actions">';
           if ($model->is_property()) {
             printf('<a href="/forms/editprop?uri=%s" accesskey="e">Edit</a>', htmlspecialchars(urlencode($uri)) );
-            echo ' | ';
-            printf('<a href="/forms/newprop?subPropertyOf=%s">Add sub-property</a>', htmlspecialchars(urlencode($uri)) );
+//            echo ' | ';
+//            printf('<a href="/forms/newprop?subPropertyOf=%s">Add sub-property</a>', htmlspecialchars(urlencode($uri)) );
           }
           else {
             printf('<a href="/forms/editclass?uri=%s" accesskey="e">Edit</a>', htmlspecialchars(urlencode($uri)) );
-            echo ' | ';
-            printf('<a href="/forms/newclass?subClassOf=%s">Add sub-class</a>', htmlspecialchars(urlencode($uri)) );
+//            echo ' | ';
+//            printf('<a href="/forms/newclass?subClassOf=%s">Add sub-class</a>', htmlspecialchars(urlencode($uri)) );
           }
 
           if ( in_array($this->session->userdata('openid'), config_item('superusers')) ) {

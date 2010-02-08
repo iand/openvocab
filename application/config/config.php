@@ -12,8 +12,8 @@ define('MORIARTY_HTTP_CACHE_USE_STALE_ON_FAILURE', TRUE ); // use a cached respo
 
 $config['resource_base'] = "http://open.vocab.org";
 $config['store_uri'] = "http://api.talis.com/stores/openvocab-dev1";
-$config['store_user'] = "openvocab";
-$config['store_pwd'] = "xxxxxxx";
+$config['store_user'] = USER_NAME;
+$config['store_pwd'] = USER_PWD;
 
 
 
@@ -50,8 +50,8 @@ $config['superusers'] = array('http://claimid.com/iandavis');
 | http://example.com/
 |
 */
-//$config['base_url'] = "http://" . $_SERVER["HTTP_HOST"] . "/";
-$config['base_url'] = "http://admin.vocab.org.local/";
+$config['base_url'] = "http://" . $_SERVER["HTTP_HOST"] . "/";
+//$config['base_url'] = "http://admin.vocab.org.local/";
 
 /*
 |--------------------------------------------------------------------------

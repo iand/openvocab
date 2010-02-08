@@ -35,7 +35,7 @@
 |
 | This route lets you set a "secret" word that will trigger the
 | scaffolding feature for added security. Note: Scaffolding must be
-| enabled in the controller in which you intend to use it.   The reserved 
+| enabled in the controller in which you intend to use it.   The reserved
 | routes must come before any wildcard or regular expression routes.
 |
 */
@@ -63,6 +63,7 @@ $route[config_item('term_document_path') . '\.json$'] = "vocabdocs/do_json/$1";
 $route['login'] = "login";
 $route['create'] = "content/create";
 $route['forms/newprop'] = "newprop";
+$route['forms/deleteterm'] = "deleteterm";
 
 
 /* End of file routes.php */
