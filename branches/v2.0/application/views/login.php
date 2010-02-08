@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    
+
     <?php
       echo '<title>Login to '. htmlspecialchars(config_item('site_name')) . '</title>' . "\n";
     ?>
@@ -13,15 +13,9 @@
     <link rel="stylesheet" href="/css/blueprint/screen.css" type="text/css" media="screen, projection">
     <link rel="stylesheet" href="/css/blueprint/print.css" type="text/css" media="print">
     <!--[if lt IE 8]><link rel="stylesheet" href="/css/blueprint/ie.css" type="text/css" media="screen, projection"><![endif]-->
+    <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection">
+    <?php if(isset($js)) echo $js; ?>
 
-    <style type="text/css">
-      .alt { 
-        color: #666; 
-        font-family: "Warnock Pro", "Goudy Old Style","Palatino","Book Antiqua", Georgia, serif; 
-        font-style: italic;
-        font-weight: normal;
-      }    
-    </style>     
   </head>
   <body>
     <div class="container">

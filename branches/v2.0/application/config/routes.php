@@ -61,8 +61,9 @@ $route[config_item('term_document_path') . '\.ttl$'] = "vocabdocs/do_turtle/$1";
 $route[config_item('term_document_path') . '\.json$'] = "vocabdocs/do_json/$1";
 
 $route['login'] = "login";
-$route['create'] = "content/create";
-$route['forms/newprop'] = "newprop";
+$route['create'] = "create";
+$route['forms/newprop'] = "property/create";
+$route['forms/editprop'] = "property/edit";
 $route['forms/deleteterm'] = "deleteterm";
 
 

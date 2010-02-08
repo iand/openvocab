@@ -1,7 +1,7 @@
 <?php
 require_once MORIARTY_DIR . 'datatable.class.php';
 
-class Newprop extends Controller {
+class Property extends Controller {
   var $_max_relations = 3;
 
 
@@ -12,7 +12,16 @@ class Newprop extends Controller {
     $this->load->library('session');
   }
 
-  function index() {
+  function edit() {
+    $this->show_form();
+  }
+
+
+  function create() {
+    $this->show_form();
+  }
+
+  function show_form() {
     if (!$this->session->userdata('logged_in')) {
       redirect('login');
       exit;
@@ -51,7 +60,6 @@ class Newprop extends Controller {
 
 
     if ($this->form_validation->run() == FALSE) {
-
 
       $dt = new DataTable(config_item('store_uri'));
       $dt->map(RDFS_LABEL, 'label');

@@ -6,7 +6,7 @@ define('MORIARTY_ARC_DIR', LIB_DIR . 'arc_2008_11_18' . DIRECTORY_SEPARATOR);
 $cache_dir = dirname(dirname(dirname(__FILE__))).DIRECTORY_SEPARATOR.'cache';
 define('MORIARTY_HTTP_CACHE_DIR', $cache_dir);
 
-//define('MORIARTY_HTTP_CACHE_READ_ONLY', TRUE);
+define('MORIARTY_HTTP_CACHE_READ_ONLY', TRUE);
 define('MORIARTY_HTTP_CACHE_USE_STALE_ON_FAILURE', TRUE ); // use a cached response if network fails
 
 

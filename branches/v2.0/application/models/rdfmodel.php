@@ -2,6 +2,7 @@
 require_once MORIARTY_DIR . 'moriarty.inc.php';
 require_once MORIARTY_DIR . 'datatable.class.php';
 require_once MORIARTY_DIR . 'credentials.class.php';
+require_once MORIARTY_DIR . 'httprequestfactory.class.php';
 
 class RDFModel extends Model {
   var $graph;
@@ -35,7 +36,9 @@ class RDFModel extends Model {
   }
 
   protected function get_datatable($store_uri, $credentials) {
-    $dt = new DataTable($store_uri, $credentials);
+    $request_factory = new HttpRequestFactory();
+    $request_factory->read_from_cache(FALSE); // treat cache as write-through
+    $dt = new DataTable($store_uri, $credentials, $request_factory);
     foreach ($this->_fields as $short_name => $field_info) {
       $dt->map($field_info['property_uri'],$short_name);
     }
