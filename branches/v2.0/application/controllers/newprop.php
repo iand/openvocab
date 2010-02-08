@@ -1,9 +1,6 @@
 <?php
 require_once MORIARTY_DIR . 'datatable.class.php';
 
-
-
-
 class Newprop extends Controller {
   var $_max_relations = 3;
 
@@ -16,6 +13,11 @@ class Newprop extends Controller {
   }
 
   function index() {
+    if (!$this->session->userdata('logged_in')) {
+      redirect('login');
+      exit;
+    }
+
     $this->load->library('jquery');
     $this->jquery->setExternalJquery('/js/jquery-1.3.2.min.js');
     $this->jquery->addExternalScript('/js/pretty.js');
@@ -25,10 +27,7 @@ class Newprop extends Controller {
     $data = array();
 
 
-    if (!$this->session->userdata('logged_in')) {
-      redirect('login');
-      exit;
-    }
+
 
     $this->load->helper(array('form', 'url'));
 
@@ -237,33 +236,33 @@ class Newprop extends Controller {
       $this->load->view('form.editproperty.php', $data);
     }
     else {
-      $this->load->model('TermDescription', 'model');
+      $this->load->model('Term', 'term');
+      $this->load->model('TermDescription', 'termdescription');
 
-      $this->model->set_uri(config_item('vocab_uri') . $this->input->post('slug'));
-      $this->model->is_defined_by = config_item('resource_base') . '/' . config_item('term_path');
+      $this->term->set_uri(config_item('vocab_uri') . $this->input->post('slug'));
+      $this->term->is_defined_by = config_item('resource_base') . '/' . config_item('term_path');
       $doc_path=  '/' . config_item('term_document_path') . config_item('term_delimiter') . $this->input->post('slug');
-      $this->model->userdocs = config_item('resource_base') . $doc_path;
+      $this->term->userdocs = config_item('resource_base') . $doc_path;
+      $this->term->status = "unstable";
 
 
-      $this->model->label = $this->input->post('label_en');
-      $this->model->plural = $this->input->post('plural_en');
-      $this->model->comment = $this->input->post('comment_en');
-      $this->model->is_property = TRUE;
-      $this->model->is_class = FALSE;
+      $this->term->label = $this->input->post('label_en');
+      $this->term->plural = $this->input->post('plural_en');
+      $this->term->comment = $this->input->post('comment_en');
+      $this->term->is_property = TRUE;
+      $this->term->is_class = FALSE;
       if ( $this->input->post('functional') ) {
-        $this->model->is_functional = TRUE;
+        $this->term->is_functional = TRUE;
       }
       if ( $this->input->post('inversefunctional') ) {
-        $this->model->is_inversefunctional = TRUE;
+        $this->term->is_inversefunctional = TRUE;
       }
       if ( $this->input->post('symmetric') ) {
-        $this->model->is_symmetrical = TRUE;
+        $this->term->is_symmetrical = TRUE;
       }
       if ( $this->input->post('transitive') ) {
-        $this->model->is_transitive = TRUE;
+        $this->term->is_transitive = TRUE;
       }
-
-
 
 //      $this->model->description = $this->input->post('description_en');
       $this->set_model_multivalue_field('domain', 'domains');
@@ -273,10 +272,9 @@ class Newprop extends Controller {
       $this->set_model_multivalue_field('subprop', 'superproperties');
 
 
-      $response = $this->model->insert_data();
+      $response = $this->term->insert_data();
 
       redirect( $doc_path, 'location', 302);
-      //$this->load->view('formsuccess', $data);
     }
 
   }

@@ -100,8 +100,6 @@ class RDFModel extends Model {
               $i++;
             }
           }
-
-  //        $this->$short_name = array();
         }
         else {
           $dt->set($short_name, $this->$short_name, $this->_fields[$short_name]['value_type']);
@@ -109,24 +107,23 @@ class RDFModel extends Model {
       }
     }
 
-
-//    echo sprintf('<h2>SPARQL</h2><pre>%s</pre>', htmlspecialchars($dt->get_sparql()));
-//    echo sprintf('<h2>Results</h2><pre>%s</pre>', htmlspecialchars($dt->get()->to_string()));
 //    echo sprintf('<h2>Changeset</h2><pre>%s</pre>', htmlspecialchars($dt->get_update_changeset()->to_turtle()));
-//    echo sprintf('<h2>Insert Graph</h2><pre>%s</pre>', htmlspecialchars($dt->get_insert_graph()->to_turtle()));
-/*
-    if ($this->_uri->get_value()) {
-*/
-      $response = $dt->update();
-/*
-    }
-    else {
-      $response = $dt->insert();
-    }
-
-*/
+    $response = $dt->update();
     return $response;
   }
+
+  function delete_data() {
+    $dt = $this->get_datatable(config_item('store_uri'), new Credentials(config_item('store_user'), config_item('store_pwd')) );
+    $dt->set('_uri', $this->get_uri());
+    foreach ($this->_fields as $short_name => $field_info) {
+      $dt->set($short_name, null);
+    }
+//    echo sprintf('<h2>Sparql</h2><pre>%s</pre>', htmlspecialchars($dt->get_sparql()));
+//    echo sprintf('<h2>Changeset</h2><pre>%s</pre>', htmlspecialchars($dt->get_update_changeset()->to_turtle()));
+    $response = $dt->update();
+    return $response;
+  }
+
 
   function has_data() {
     return $this->_has_data;
@@ -147,5 +144,13 @@ class RDFModel extends Model {
   function to_turtle() {
     return $this->graph->to_turtle();
   }
+
+  function dump_update_info() {
+    echo sprintf('<h2>SPARQL</h2><pre>%s</pre>', htmlspecialchars($dt->get_sparql()));
+    echo sprintf('<h2>Results</h2><pre>%s</pre>', htmlspecialchars($dt->get()->to_string()));
+    echo sprintf('<h2>Changeset</h2><pre>%s</pre>', htmlspecialchars($dt->get_update_changeset()->to_turtle()));
+    echo sprintf('<h2>Insert Graph</h2><pre>%s</pre>', htmlspecialchars($dt->get_insert_graph()->to_turtle()));
+  }
+
 
 }
