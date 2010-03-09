@@ -1,5 +1,4 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
-define('PAGET_DIR', LIB_DIR . 'paget2' . DIRECTORY_SEPARATOR);
 define('MORIARTY_DIR', LIB_DIR . 'moriarty' . DIRECTORY_SEPARATOR);
 define('MORIARTY_ARC_DIR', LIB_DIR . 'arc_2008_11_18' . DIRECTORY_SEPARATOR);
 
@@ -25,6 +24,13 @@ $config['term_path'] = "terms";
 
 // This is where documentation for terms will live
 $config['term_document_path'] = "docs";
+
+// This is where URIs for people will be created
+$config['user_path'] = "people";
+
+// This is where URIs for changes will be created
+$config['change_path'] = "changes";
+
 
 // An HTML snippet to use at the foot of each page
 $config['footer_html'] = 'Service provided by <a href="http://iandavis.com/">Ian Davis</a> using the <a href="http://www.talis.com/platform">Talis Platform</a>. Project hosting by <a href="http://code.google.com/p/openvocab/">Google Code</a>. All text and data are in the <a href="http://open.vocab.org.local/about/rights">Public Domain</a>.';
@@ -224,7 +230,7 @@ $config['log_threshold'] = 4;
 | system/logs/ folder.  Use a full server path with trailing slash.
 |
 */
-$config['log_path'] = '/home/iand/web/vocab.org/admin/logs/';
+$config['log_path'] = '/home/iand/web/vocab.org/open-v20/logs/';
 /*
 |--------------------------------------------------------------------------
 | Date Format for Logs
@@ -245,7 +251,10 @@ $config['log_date_format'] = 'Y-m-d H:i:s';
 | system/cache/ folder.  Use a full server path with trailing slash.
 |
 */
-$config['cache_path'] = MORIARTY_HTTP_CACHE_DIR;
+
+if (defined('MORIARTY_HTTP_CACHE_DIR')) {
+  $config['cache_path'] = MORIARTY_HTTP_CACHE_DIR;
+}
 
 /*
 |--------------------------------------------------------------------------

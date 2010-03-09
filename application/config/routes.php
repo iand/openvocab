@@ -53,6 +53,18 @@ if (config_item('term_delimiter') == '/') {
 }
 
 
+$route[config_item('change_path') . '$'] = "changes/do_conneg/$1";
+$route[config_item('change_path') . '\.html$'] = "changes/do_html/$1";
+$route[config_item('change_path') . '\.rdf$'] = "changes/do_rdf/$1";
+$route[config_item('change_path') . '\.ttl$'] = "changes/do_turtle/$1";
+$route[config_item('change_path') . '\.json$'] = "changes/do_json/$1";
+$route[config_item('change_path') . '/([a-zA-Z0-9-]+)'] = "change/do_conneg/$1";
+$route[config_item('change_path') . '/([a-zA-Z0-9-]+)\.html'] = "change/do_html/$1";
+$route[config_item('change_path') . '/([a-zA-Z0-9-]+)\.rdf'] = "change/do_rdf/$1";
+$route[config_item('change_path') . '/([a-zA-Z0-9-]+)\.ttl'] = "change/do_turtle/$1";
+$route[config_item('change_path') . '/([a-zA-Z0-9-]+)\.json'] = "change/do_json/$1";
+
+
 $route[config_item('term_path') . '$'] = "vocab/do_303/$1";
 $route[config_item('term_document_path') . '$'] = "vocabdocs/do_conneg/$1";
 $route[config_item('term_document_path') . '\.html$'] = "vocabdocs/do_html/$1";
@@ -62,8 +74,14 @@ $route[config_item('term_document_path') . '\.json$'] = "vocabdocs/do_json/$1";
 
 $route['login'] = "login";
 $route['create'] = "create";
-$route['forms/newprop'] = "property/create";
+$route['about'] = "about";
+$route['about/rights'] = "about";
+$route['about/privacy'] = "about";
+$route['about/availability'] = "about";
+$route['forms/newprop'] = "property/add";
 $route['forms/editprop'] = "property/edit";
+$route['forms/newclass'] = "classcontroller/add";
+$route['forms/editclass'] = "classcontroller/edit";
 $route['forms/deleteterm'] = "deleteterm";
 
 

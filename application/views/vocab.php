@@ -44,9 +44,11 @@
       <div class="span-11 colborder">
         <h3>Properties</h3>
         <?php
-          foreach ($model->properties as $result) {
-            echo '<p class="term"><span class="label"><a href="' . htmlspecialchars(local_link($result->_uri)) . '">' . htmlspecialchars($result->label) . '</a></span>';
-            if ($result->comment) echo '<br /><span class="comment">' . htmlspecialchars($result->comment). '</span>';
+          foreach ($model->properties as $uri) {
+            echo '<p class="term"><span class="label"><a href="' . htmlspecialchars(local_link($uri)) . '">' . htmlspecialchars($model->graph->get_label($uri)) . '</a></span>';
+            echo '<br /><span class="uri">' . htmlspecialchars($uri) . '</span>';
+            $comment = $model->graph->get_first_literal($uri, RDFS_COMMENT);
+            if ($comment) echo '<br /><span class="comment">' . htmlspecialchars($comment). '</span>';
             echo '</p>';
           }
         ?>
@@ -56,8 +58,10 @@
         <h3>Classes</h3>
         <?php
           foreach ($model->classes as $result) {
-            echo '<p class="term"><span class="label"><a href="' . htmlspecialchars(local_link($result->_uri)) . '">' . htmlspecialchars($result->label) . '</a></span>';
-            if ($result->comment) echo '<br /><span class="comment">' . htmlspecialchars($result->comment). '</span>';
+            echo '<p class="term"><span class="label"><a href="' . htmlspecialchars(local_link($uri)) . '">' . htmlspecialchars($model->graph->get_label($uri)) . '</a></span>';
+            echo '<br /><span class="uri">' . htmlspecialchars($uri) . '</span>';
+            $comment = $model->graph->get_first_literal($uri, RDFS_COMMENT);
+            if ($comment) echo '<br /><span class="comment">' . htmlspecialchars($comment). '</span>';
             echo '</p>';
           }
         ?>

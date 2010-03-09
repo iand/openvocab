@@ -12,14 +12,16 @@
 
       echo '<title>' . htmlspecialchars($title) . '</title>' . "\n";
 
-      $desc = '';
-      if ($model->comment) $desc .= 'Definition: ' . $model->comment;
+      $descs = array();
+      if ($model->label) $descs[] = 'Label: ' . $model->label;
+      if ($model->comment) $descs[] = 'Definition: ' . $model->comment;
 
 
-      if ($desc) {
-        echo '<meta name="description" content="' . htmlspecialchars($desc) . '" />' . "\n";
+      if (count($descs)) {
+        echo '    <meta name="description" content="' . htmlspecialchars(join('; ', $descs)) . '" />' . "\n";
       }
     ?>
+    <link rel="primarytopic" href="<?= htmlspecialchars($model->get_uri()); ?>">
 
     <!-- Framework CSS -->
     <link rel="stylesheet" href="/css/blueprint/screen.css" type="text/css" media="screen, projection">
@@ -43,8 +45,6 @@
     <hr>
       <div class="span-15 colborder">
         <p><strong>Full URI:</strong> <a href="<?= htmlspecialchars($model->get_uri()); ?>"><?= htmlspecialchars($model->get_uri()); ?></a></p>
-        <p>"foo is <?= htmlspecialchars($model->label);?> of thing" or "thing has <?= htmlspecialchars($model->label);?> foo"</p>
-
 
       <?php
         if ($model->comment) {

@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
     <?php
-      echo '<title>Login to '. htmlspecialchars(config_item('site_name')) . '</title>' . "\n";
+      echo '<title>A change to the ' . htmlspecialchars(config_item('vocab_name')) . ' RDF schema</title>' . "\n";
     ?>
 
     <!-- Framework CSS -->
@@ -16,30 +16,30 @@
     <link rel="stylesheet" href="/css/screen.css" type="text/css" media="screen, projection">
     <?php if(isset($js)) echo $js; ?>
 
+<?php
+  if (isset($links)) {
+    foreach ($links as $link) {
+      echo '    <link rel="alternate" type="' . htmlspecialchars($link['type']) . '" href="' . htmlspecialchars($link['href']) . '" title="' . htmlspecialchars($link['title']) . '">' . "\n";
+    }
+  }
+?>
   </head>
   <body>
     <div class="container">
     <?php require_once('header.inc.php'); ?>
-    <h2 class="bottom">Login</h2>
+    <h2 class="bottom">Change Details</h2>
     <hr>
+      <div class="span-24">
+      <?php
+         echo '<p class="term"><strong>Term changed: </strong><a href="' . htmlspecialchars(local_link($model->term)) . '">' . htmlspecialchars($model->graph->get_label($model->term)) . '</a></span></p>';
+          echo '<p><strong>Date of change: </strong>'. htmlspecialchars($model->date) . '</p>';
 
-    <?php if (isset($msg)) { echo "<div class=\"alert\">$msg</div>"; } ?>
-    <?php if (isset($error)) { echo "<div class=\"error\">$error</div>"; } ?>
-    <?php if (isset($success)) { echo "<div class=\"success\">$success</div>"; } ?>
-
-
-    <div id="verify-form" class="span-15 colborder">
-      <form method="post" action="/login">
-        <label for="openid_identifier">Enter your OpenID:</label>
-        <input type="hidden" name="action" value="verify" />
-        <input type="text" name="openid_identifier" value="" />
-        <input type="submit" value="Verify" />
-      </form>
-    </div>
-      <div class="span-8 last">
-
+        if ($model->reason) {
+          echo '<p><strong>Reason for change: </strong>'. htmlspecialchars($model->reason) . '</p>';
+        }
+      ?>
       </div>
-      <hr class="space">
+
       <hr>
       <div id="footer" class="quiet append-bottom">
         <?php echo config_item('footer_html'); ?>
@@ -47,7 +47,4 @@
     </div>
   </body>
 </html>
-
-
-
 

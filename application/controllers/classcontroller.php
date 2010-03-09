@@ -1,7 +1,8 @@
 <?php
 require_once 'termcontroller.php';
 
-class Property extends TermController {
+
+class ClassController extends TermController {
   function show_form() {
     if (!$this->session->userdata('logged_in')) {
       redirect('login');
@@ -17,18 +18,14 @@ class Property extends TermController {
     if ($this->input->post('action')) {
       // Form has been submitted
 
-      $this->fill_term(TRUE);
+      $this->fill_term(FALSE);
       $this->fill_change();
-
-//printf("<h2>CHANGE</h2><pre>%s</pre>", htmlspecialchars($this->change->to_turtle()));
-//exit;
-
       $validation_errors = $this->term->validate() + $this->change->validate();
 
       $slug = $this->input->post('slug');
       if ($slug) {
-        if (! preg_match('~[a-z][a-zA-z0-9-]~', $slug) ) {
-          $validation_errors[] = array('field' => 'slug', 'message' => 'Last segment of URI must be mixed case, must start with a lowercase letter, contain only letters, numbers and hyphen.');
+        if (! preg_match('~[A-Z][a-zA-z0-9-]~', $slug) ) {
+          $validation_errors[] = array('field' => 'slug', 'message' => 'Last segment of URI must be mixed case, must start with an uppercase letter, contain only letters, numbers and hyphen.');
         }
         else if($this->term->exists_in_store()) {
           $validation_errors[] = array('field' => 'slug', 'message' => 'The URI you specified is already in use.');
@@ -43,7 +40,6 @@ class Property extends TermController {
 
         $response = $this->term->save_to_network($this->original);
         if ($response->is_success()) {
-          $response = $this->change->save_to_network();
           $this->term->load_from_network(FALSE); // repopulate cache
           redirect( local_link($this->term->get_uri()), 'location', 303);
           exit;
@@ -75,9 +71,9 @@ class Property extends TermController {
           return;
         }
 
-        if (!$this->term->is_property() ) {
+        if (!$this->term->is_class ) {
           $data = array();
-          $data['error'] = $uri . " is not a property.";
+          $data['error'] = $uri . " is not a class.";
           $this->load->view('form.invalidterm.php', $data);
           return;
         }
@@ -110,19 +106,13 @@ class Property extends TermController {
         new_textbox.attr("value", "");
 
         $(this).before("<br />").before(new_textbox);
-        if (prefix == "domain" || prefix == "range") {
-          $("#" + new_id).autocomplete(classes, autocomplete_config);
-        }
-        else {
-          $("#" + new_id).autocomplete(properties, autocomplete_config);
-        }
+        $("#" + new_id).autocomplete(classes, autocomplete_config);
         // Stop the link click from doing its normal thing
         return false;
       }'. "\n";
 
 
     $data['js'] .= $this->get_classes_js_array();
-    $data['js'] .= $this->get_properties_js_array();
     $data['js'] .= $this->get_autocomplete_js();
 
     $data['js'] .= "\n" . '</script>'. "\n";
@@ -140,20 +130,14 @@ class Property extends TermController {
         });
 
       ' . "\n";
-      for ($i = 0; $i <= count($this->term->domains); $i++) {
-        $js_ready .= '         $("#domain_' . $i . '").autocomplete(classes, autocomplete_config);' . "\n";
+      for ($i = 0; $i <= count($this->term->superclasses); $i++) {
+        $js_ready .= '         $("#subclass_' . $i . '").autocomplete(classes, autocomplete_config);' . "\n";
       }
-      for ($i = 0; $i <= count($this->term->ranges); $i++) {
-        $js_ready .= '         $("#range_' . $i . '").autocomplete(classes, autocomplete_config);' . "\n";
+      for ($i = 0; $i <= count($this->term->disjoints); $i++) {
+        $js_ready .= '         $("#disjoint_' . $i . '").autocomplete(classes, autocomplete_config);' . "\n";
       }
-      for ($i = 0; $i <= count($this->term->superproperties); $i++) {
-        $js_ready .= '         $("#subprop_' . $i . '").autocomplete(properties, autocomplete_config);' . "\n";
-      }
-      for ($i = 0; $i <= count($this->term->inverses); $i++) {
-        $js_ready .= '         $("#inverse_' . $i . '").autocomplete(properties, autocomplete_config);' . "\n";
-      }
-      for ($i = 0; $i <= count($this->term->equivalentproperties); $i++) {
-        $js_ready .= '         $("#equivalent_' . $i . '").autocomplete(properties, autocomplete_config);' . "\n";
+      for ($i = 0; $i <= count($this->term->equivalentclasses); $i++) {
+        $js_ready .= '         $("#equivalent_' . $i . '").autocomplete(classes, autocomplete_config);' . "\n";
       }
 
     $this->jquery->addExternalScript('/js/jquery.autocomplete.js');
@@ -162,8 +146,8 @@ class Property extends TermController {
     $data['term'] = $this->term;
     $data['max_relations'] = $this->_max_relations;
     if ($this->view == 'edit') {
-      $data['form_action'] = '/forms/editprop';
-      $data['page_title'] = 'Edit Property';
+      $data['form_action'] = '/forms/editclass';
+      $data['page_title'] = 'Edit Class';
       $data['show_slug'] = FALSE;
       $data['show_reason'] = TRUE;
       $data['uri'] = $this->term->get_uri();
@@ -171,18 +155,18 @@ class Property extends TermController {
       $data['reason'] = $this->input->post('reason');
     }
     else {
-      $data['form_action'] = '/forms/newprop';
-      $data['page_title'] = 'New Property';
+      $data['form_action'] = '/forms/newclass';
+      $data['page_title'] = 'New Class';
       $data['show_slug'] = TRUE;
       $data['show_reason'] = FALSE;
       $data['cancel_link'] = '/' . config_item('term_document_path');
       $data['slug'] = $this->input->post('slug');
     }
-    $this->load->view('form.editproperty.php', $data);
+    $this->load->view('form.editclass.php', $data);
 
   }
 
+
+
 }
-
-
 ?>

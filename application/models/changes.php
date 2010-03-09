@@ -1,7 +1,7 @@
 <?php
 require_once 'rdfmodel.php';
 
-class VocabDescription extends RDFModel {
+class ChangeList extends RDFModel {
   function __construct() {
     $this->define_field('label', RDFS_LABEL);
     $this->define_field('comment', RDFS_COMMENT);
