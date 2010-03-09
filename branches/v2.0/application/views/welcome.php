@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
     <?php
-      echo '<title>Login to '. htmlspecialchars(config_item('site_name')) . '</title>' . "\n";
+      echo '<title>'. htmlspecialchars(config_item('site_name')) . '</title>' . "\n";
     ?>
 
     <!-- Framework CSS -->
@@ -20,7 +20,7 @@
   <body>
     <div class="container">
     <?php require_once('header.inc.php'); ?>
-    <h2 class="bottom">Login</h2>
+    <h2 class="bottom">Welcome</h2>
     <hr>
 
     <?php if (isset($msg)) { echo "<div class=\"alert\">$msg</div>"; } ?>
@@ -28,16 +28,19 @@
     <?php if (isset($success)) { echo "<div class=\"success\">$success</div>"; } ?>
 
 
-    <div id="verify-form" class="span-15 colborder">
-      <form method="post" action="/login">
-        <label for="openid_identifier">Enter your OpenID:</label>
-        <input type="hidden" name="action" value="verify" />
-        <input type="text" name="openid_identifier" value="" />
-        <input type="submit" value="Verify" />
-      </form>
+    <div id="content" class="span-15 colborder">
+
     </div>
       <div class="span-8 last">
+        <div class="box">
+          <h2>News</h2>
+          <p>Read the <a href="http://blog.iandavis.com/2008/12/introducing-openvocab">blog post</a> introducing OpenVocab.</p>
 
+        </div>
+        <div class="box">
+          <h2>About</h2>
+          <p>OpenVocab is a community maintained vocabulary intended for use on the Semantic Web, ideal for properties and classes that don't warrant the effort of creating or maintaining a full schema. OpenVocab allows anyone to create and modify vocabulary terms using their web browser. Each term is described using appropriate elements of RDF, RDFS and OWL. OpenVocab allows you to create any properties and classes; assign labels, comments and descriptions; declare domains and ranges and much more.</p>
+        </div>
       </div>
       <hr class="space">
       <hr>

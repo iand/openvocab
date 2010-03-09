@@ -1,10 +1,8 @@
 <?php
-require_once MORIARTY_DIR . 'datatable.class.php';
-
 class DeleteTerm extends Controller {
   function __construct() {
     parent::Controller();
-    $this->output->enable_profiler(TRUE);
+//    $this->output->enable_profiler(TRUE);
     $this->load->helper('url');
     $this->load->helper('local_link');
     $this->load->library('session');
@@ -28,7 +26,7 @@ class DeleteTerm extends Controller {
     if ($this->form_validation->run() == FALSE) {
       $this->load->model('Term', 'model');
       $this->model->set_uri($uri);
-      $this->model->read_data();
+      $this->model->load_from_network();
       $data['uri'] = $uri;
       $data['model'] = $this->model;
       $this->load->view('form.deleteterm.php', $data);
@@ -36,7 +34,7 @@ class DeleteTerm extends Controller {
     else {
       $this->load->model('Term', 'model');
       $this->model->set_uri($uri);
-      $response = $this->model->delete_data();
+      $response = $this->model->delete_from_network();
       redirect( 'docs', 'location', 302);
       exit;
     }

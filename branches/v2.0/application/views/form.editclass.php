@@ -56,7 +56,7 @@ function list_form_fields($label, $name, $values, $max) {
           <th><label for="slug">URI: </label></th>
           <?php if ($show_slug) { ?>
           <td nowrap="nowrap">http://open.vocab.org/terms/<input type="text" class="text slug" name="slug" id="slug" value="<?php echo set_value('slug'); ?>"/></td>
-          <td><span class="hint quiet">(Take care: you cannot edit this after you save)</span><br /><span class="hint quiet">Last segment of URI must be mixed case, must start with a lowercase letter, contain only letters, numbers and hyphen</span></td>
+          <td><span class="hint quiet">(Take care: you cannot edit this after you save)</span><br /><span class="hint quiet">Last segment of URI must be mixed case, must start with an uppercase letter, contain only letters, numbers and hyphen</span></td>
           <?php } else { ?>
           <td colspan="2"><?php echo htmlspecialchars($uri); ?><input type="hidden" name="uri" id="uri" value="<?php echo htmlspecialchars($uri); ?>"/></td>
           <?php } ?>
@@ -66,9 +66,9 @@ function list_form_fields($label, $name, $values, $max) {
           <th><label for="label_en">Singular label<br />(in English): </label></th>
           <td><input type="text" class="text" size="60" name="label_en" id="label_en" value="<?php e($term->label); ?>"/></td>
           <td>
-            <span class="hint quiet">Capitalise this label using title case, as though it was being used as a heading in a table. A useful naming convention for labels is to follow the <a href="http://esw.w3.org/topic/RoleNoun">role-noun</a> pattern. Would your label fit into the following sentences:</span>
+            <span class="hint quiet">Capitalise this label using title case, as though it was being used as a heading in a table. Would your singular label fit into the following sentence:</span>
             <br />
-            <span class="hint example quiet">"foo is <em class="label"></em> of thing" or "thing has <em class="label"></em> foo"</span>
+            <span class="hint example quiet">"foo is a <em class="label"></em>"</span>
           </td>
         </tr>
 
@@ -76,9 +76,9 @@ function list_form_fields($label, $name, $values, $max) {
           <th><label for="plural_en">Plural label<br />(in English): </label></th>
           <td><input type="text" class="text" size="60" name="plural_en" id="plural_en" value="<?php e($term->plural); ?>"/></td>
           <td>
-            <span class="hint quiet">Would your plural label fit into the following sentences:</span>
+            <span class="hint quiet">Would your plural label fit into the following sentence:</span>
             <br />
-            <span class="hint example quiet">"the <em class="plural"></em> of thing are foo and bar" or "foo and bar are <em class="plural"></em> of foo"</span>
+            <span class="hint example quiet">"foo is one of a number of <em class="plural"></em>"</span>
           </td>
         </tr>
 
@@ -87,27 +87,10 @@ function list_form_fields($label, $name, $values, $max) {
           <td colspan="2"><textarea rows="4" cols="80" name="comment_en" id="comment_en" style="width:100%;"><?php e($term->comment); ?></textarea></td>
         </tr>
 
-        <tr>
-          <th><label for="type">Value Type: </label></th>
-          <td colspan="2"><select name="type" id="type"><option>(any)</option><option>Datatype Property</option><option>Object Property</option></select></td>
-        </tr>
-
-        <tr>
-          <th><label>Characteristics: </label></th>
-          <td colspan="2">
-            <label for="functional"><input type="checkbox" name="functional" id="functional" value="1" <?php if ($term->is_functional) echo "checked"; ?>/>Is functional?</label><br />
-            <label for="inversefunctional"><input type="checkbox" name="inversefunctional" id="inversefunctional" value="1" <?php if ($term->is_inverse_functional) echo "checked"; ?>/>Is inverse functional?</label><br />
-            <label for="symmetric"><input type="checkbox" name="symmetric" id="symmetric" value="1" <?php if ($term->is_symmetrical) echo "checked"; ?>/>Is symmetric?</label><br />
-            <label for="transitive"><input type="checkbox" name="transitive" id="transitive" value="1" <?php if ($term->is_transitive) echo "checked"; ?>/>Is transitive?</label><br />
-          </td>
-        </tr>
-
         <?php
-          list_form_fields('Domain', 'domain', $term->domains, $max_relations);
-          list_form_fields('Range', 'range', $term->ranges, $max_relations);
-          list_form_fields('Sub-property of', 'subprop', $term->superproperties, $max_relations);
-          list_form_fields('Inverse of', 'inverse', $term->inverses, $max_relations);
-          list_form_fields('Equivalent to', 'equivalent', $term->equivalentproperties, $max_relations);
+          list_form_fields('Sub-class of', 'subclass', $term->superclasses, $max_relations);
+          list_form_fields('Disjoint with', 'disjoint', $term->disjoints, $max_relations);
+          list_form_fields('Equivalent to', 'equivalent', $term->equivalentclasses, $max_relations);
         ?>
 <?php /*
         <tr>

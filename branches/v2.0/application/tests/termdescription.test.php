@@ -1,5 +1,5 @@
 <?php
-require_once OPENVOCAB_DIR . 'controllers/vocabdocs.php';
+require_once '../controllers/vocabdocs.php';
 
 class TermDescriptionTest extends PHPUnit_Framework_TestCase {
 

@@ -12,7 +12,7 @@ abstract class RDFController extends Controller {
   function __construct() {
     if (count($_GET)) show_404('page');
     parent::Controller();
-    $this->output->enable_profiler(TRUE);
+    //$this->output->enable_profiler(TRUE);
 
     $this->load->library('session');
     $this->load->helper('local_link');
@@ -24,15 +24,16 @@ abstract class RDFController extends Controller {
     $this->type = '';
 
     $this->resource_path = '/';
-    $this->resource_uri = $this->config->item('resource_base') . $this->uri->uri_string();
+
+    //$this->config->item('resource_base') . $this->uri->uri_string();
 
     if (preg_match('~^(.+)\.(html|rdf|ttl|json)$~', $path, $m) ) {
-      $this->resource_uri = $this->config->item('resource_base')  . str_replace('/' . $this->config->item('term_document_path') .'/', '/' .  $this->config->item('term_path') . '/', $m[1]);
+      //$this->resource_uri = $this->config->item('resource_base')  . str_replace('/' . $this->config->item('term_document_path') .'/', '/' .  $this->config->item('term_path') . '/', $m[1]);
       $this->doc_uri = $this->request_uri;
       $this->doc_type = $m[2];
     }
     else {
-      $this->resource_uri = $this->config->item('resource_base')  . str_replace('/' .$this->config->item('term_document_path') . '/', '/' . $this->config->item('term_path') . '/', $path);
+      //$this->resource_uri = $this->config->item('resource_base')  . str_replace('/' .$this->config->item('term_document_path') . '/', '/' . $this->config->item('term_path') . '/', $path);
       $this->doc_uri = 'http://' . $this_host . $path . '.html';
       $this->doc_type = 'html';
 
@@ -47,14 +48,19 @@ abstract class RDFController extends Controller {
       }
 
     }
+    $this->resource_uri =$this->get_resource_uri($this->request_uri, $path);
     $this->load_model();
 
     $this->model->set_uri($this->resource_uri);
-    $this->model->read_data();
+    $this->model->load_from_network();
 
     if (!$this->model->has_data() ) {
       show_404('page');
     }
+  }
+
+  function get_resource_uri($request_uri, $request_path) {
+    return $this->config->item('resource_base') . $this->uri->uri_string();
   }
 
 

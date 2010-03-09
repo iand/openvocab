@@ -1,7 +1,7 @@
       <div class="span-12 prepend-top"><h1><?php echo config_item('site_name'); ?></h1></div>
       <div class="span-12 large last" style="text-align:right">
-      
-        <a href="/terms">Terms</a> |
+
+        <a href="/<?php echo(htmlspecialchars(config_item('term_document_path'))); ?>">Terms</a> |
         <a href="/create">Create</a> |
         <a href="/changes">Recent Changes</a> |
         <?php if (!$this->session->userdata('logged_in') ) {?>
