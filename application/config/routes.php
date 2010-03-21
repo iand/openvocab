@@ -85,6 +85,8 @@ $route['forms/editprop'] = "propertycontroller/edit";
 $route['forms/newclass'] = "classcontroller/add";
 $route['forms/editclass'] = "classcontroller/edit";
 $route['forms/deleteterm'] = "deleteterm";
+$route['forms/recdelete'] = "recommenddeletion";
+$route['forms/rectesting'] = "recommendtesting";
 
 
 /* End of file routes.php */

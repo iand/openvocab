@@ -5,7 +5,7 @@ require_once 'rdfmodel.php';
 class TermChange extends RDFModel {
   function __construct() {
     $this->define_field('creator', DC_CREATOR, 'resource_scalar');
-    $this->define_field('term', 'http://www.w3.org/2004/02/skos/core#changeNote', 'inverse_scalar');
+    $this->define_field('term', 'http://www.w3.org/2004/02/skos/core#note', 'inverse_scalar');
     $this->define_field('label', RDFS_LABEL);
     $this->define_field('reason', RDFS_COMMENT);
     $this->define_field('after', 'http://open.vocab.org/terms/afterGraph');
@@ -30,7 +30,7 @@ class TermChange extends RDFModel {
       prefix skos: <http://www.w3.org/2004/02/skos/core#>
       prefix dc: <http://purl.org/dc/elements/1.1/>
       describe ?term  <" . $this->_uri . "> {
-        ?term skos:changeNote <" . $this->_uri . "> .
+        ?term skos:note <" . $this->_uri . "> .
       }";
 
 
