@@ -57,7 +57,7 @@
       <div class="span-11 last">
         <h3>Classes</h3>
         <?php
-          foreach ($model->classes as $result) {
+          foreach ($model->classes as $uri) {
             echo '<p class="term"><span class="label"><a href="' . htmlspecialchars(local_link($uri)) . '">' . htmlspecialchars($model->graph->get_label($uri)) . '</a></span>';
             echo '<br /><span class="uri">' . htmlspecialchars($uri) . '</span>';
             $comment = $model->graph->get_first_literal($uri, RDFS_COMMENT);

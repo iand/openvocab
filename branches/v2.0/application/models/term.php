@@ -6,6 +6,7 @@ class Term extends RDFModel {
   function __construct() {
     $this->define_field('label', RDFS_LABEL);
     $this->define_field('comment', RDFS_COMMENT);
+    $this->define_field('created', 'http://purl.org/dc/elements/1.1/created', 'datetime_scalar');
     $this->define_field('status', 'http://www.w3.org/2003/06/sw-vocab-status/ns#term_status');
     $this->define_field('plural', 'http://purl.org/net/vocab/2004/03/label#plural');
     $this->define_field('is_defined_by', RDFS_ISDEFINEDBY, 'resource_scalar');

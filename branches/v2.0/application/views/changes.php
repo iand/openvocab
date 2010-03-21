@@ -46,13 +46,15 @@
             $terms = $model->graph->get_subjects_where_resource('http://www.w3.org/2004/02/skos/core#changeNote', $uri);
 
             echo '<tr class="term">';
-            $date = $model->graph->get_first_literal($uri, DC_DATE);
+            $date = $model->graph->get_first_literal($uri, 'http://purl.org/dc/elements/1.1/created');
             echo '<td valign="top"><span class="date">' . htmlspecialchars($date) . '</span></td>';
             echo '<td valign="top"><span class="label"><a href="' . htmlspecialchars(local_link($terms[0])) . '">'.  htmlspecialchars($model->graph->get_label($terms[0])) . '</a></span></td>';
             $comment = $model->graph->get_first_literal($uri, RDFS_COMMENT);
             echo '<td valign="top"><span class="comment">' . htmlspecialchars($comment). '</span></td>';
-            echo '<td valign="top"><span class="creator"></span></td>';
-            echo '<td valign="top"><span class="label"><a href="' . htmlspecialchars(local_link($uri)) . '">more details</a></span></td>';
+            $creator_uri = $model->graph->get_first_resource($uri, DC_CREATOR);
+            $openid = $model->graph->get_first_resource($creator_uri, 'http://xmlns.com/foaf/0.1/openid');
+            echo '<td valign="top"><span class="creator">' . htmlspecialchars($openid) . '</span></td>';
+            echo '<td valign="top"><span class="details"><a href="' . htmlspecialchars(local_link($uri)) . '">details</a></span></td>';
             echo '</tr>';
           }
 

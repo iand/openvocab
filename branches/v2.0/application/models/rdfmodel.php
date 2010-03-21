@@ -71,7 +71,6 @@ class RDFModel extends Model {
    **/
   function write_fields() {
     $this->graph = new SimpleGraph();
-    $this->graph->set_namespace_mapping(config_item('vocab_prefix'), config_item('vocab_uri'));
     $this->graph->update_prefix_mappings();
     $this->collect_triples();
     foreach ($this->_fdefs as $field_info) {
@@ -102,7 +101,7 @@ class RDFModel extends Model {
    **/
   function write_literal_scalar($short_name, $property_uri) {
     $this->graph->remove_property_values($this->_uri, $property_uri);
-    $this->graph->add_literal_triple($this->_uri, $property_uri, $this->$short_name);
+    if (isset($this->$short_name)) $this->graph->add_literal_triple($this->_uri, $property_uri, $this->$short_name);
   }
 
   /**
@@ -126,7 +125,7 @@ class RDFModel extends Model {
    **/
   function write_resource_scalar($short_name, $property_uri) {
     $this->graph->remove_property_values($this->_uri, $property_uri);
-    $this->graph->add_resource_triple($this->_uri, $property_uri, $this->$short_name);
+    if (isset($this->$short_name)) $this->graph->add_resource_triple($this->_uri, $property_uri, $this->$short_name);
   }
 
 
@@ -150,8 +149,12 @@ class RDFModel extends Model {
    **/
   function write_literal_array($short_name, $property_uri) {
     $this->graph->remove_property_values($this->_uri, $property_uri);
-    foreach ($this->$short_name as $value) {
-      $this->graph->add_literal_triple($this->_uri, $property_uri, $value);
+    if (is_array($this->$short_name)) {
+      foreach ($this->$short_name as $value) {
+        if (isset($value)) {
+          $this->graph->add_literal_triple($this->_uri, $property_uri, $value);
+        }
+      }
     }
   }
 
@@ -176,8 +179,12 @@ class RDFModel extends Model {
    **/
   function write_resource_array($short_name, $property_uri) {
     $this->graph->remove_property_values($this->_uri, $property_uri);
-    foreach ($this->$short_name as $value) {
-      $this->graph->add_resource_triple($this->_uri, $property_uri, $value);
+    if (is_array($this->$short_name)) {
+      foreach ($this->$short_name as $value) {
+        if (isset($value)) {
+          $this->graph->add_resource_triple($this->_uri, $property_uri, $value);
+        }
+      }
     }
   }
 
@@ -206,7 +213,7 @@ class RDFModel extends Model {
    **/
   function write_inverse_scalar($short_name, $property_uri) {
     $this->graph->remove_property_values($this->_uri, $property_uri);
-    $this->graph->add_resource_triple($this->$short_name, $property_uri, $this->_uri);
+    if (isset($this->$short_name)) $this->graph->add_resource_triple($this->$short_name, $property_uri, $this->_uri);
   }
 
 
@@ -216,6 +223,30 @@ class RDFModel extends Model {
   function init_inverse_scalar($short_name, $property_uri) {
     $this->$short_name = '';
   }
+
+
+  /**
+   * Read a datetime value from the graph into a scalar field.
+   **/
+  function read_datetime_scalar($short_name, $property_uri) {
+    $this->read_literal_scalar($short_name, $property_uri);
+  }
+
+  /**
+   * Write a datetime value held in a scalar field to the graph, replacing any existing values.
+   **/
+  function write_datetime_scalar($short_name, $property_uri) {
+    $this->graph->remove_property_values($this->_uri, $property_uri);
+    if (isset($this->$short_name)) $this->graph->add_literal_triple($this->_uri, $property_uri, $this->$short_name, null, 'http://www.w3.org/2001/XMLSchema#dateTime');
+  }
+
+  /**
+   * Initialise a datetime scalar field.
+   **/
+  function init_datetime_scalar($short_name, $property_uri) {
+    $this->init_literal_scalar($short_name, $property_uri);
+  }
+
 
 
 
@@ -239,10 +270,8 @@ class RDFModel extends Model {
   }
 
   function populate_graph($default_store) {
-    $response= $default_store->describe($this->_uri, 'cbd', 'json');
-    if ($response->is_success()) {
-      $this->graph->add_json($response->body);
-    }
+    $describe_uri = sprintf('%s/meta?output=json&about=%s', $default_store->uri, urlencode($this->_uri));
+    $this->graph->read_data($describe_uri);
   }
 
   function load_from_network($read_from_cache = TRUE) {
@@ -285,11 +314,6 @@ class RDFModel extends Model {
       return $store->store_data($this->graph);
     }
   }
-
-  function delete_from_network() {
-
-  }
-
 
   function get_diff($previous) {
 
@@ -369,7 +393,7 @@ printf("<h2>Changsest</h2><pre>%s</pre>", htmlspecialchars($cs->to_turtle()));
     if ($response->is_success()) {
       $graph = new SimpleGraph();
       $graph->add_json($response->body);
-      return $g->has_triples_about($this->_uri);
+      return $graph->has_triples_about($this->_uri);
     }
     return FALSE;
   }
@@ -380,22 +404,22 @@ printf("<h2>Changsest</h2><pre>%s</pre>", htmlspecialchars($cs->to_turtle()));
   }
 
   function get_qname() {
-    $this->write_fields();
+    //$this->write_fields();
     return $this->graph->uri_to_qname($this->_uri);
   }
 
   function to_rdfxml() {
-    $this->write_fields();
+    //$this->write_fields();
     return $this->graph->to_rdfxml();
   }
 
   function to_json() {
-    $this->write_fields();
+    //$this->write_fields();
     return $this->graph->to_json();
   }
 
   function to_turtle() {
-    $this->write_fields();
+    //$this->write_fields();
     return $this->graph->to_turtle();
   }
 

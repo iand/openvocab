@@ -5,11 +5,11 @@ define('MORIARTY_ARC_DIR', LIB_DIR . 'arc_2008_11_18' . DIRECTORY_SEPARATOR);
 $cache_dir = dirname(dirname(dirname(__FILE__))).DIRECTORY_SEPARATOR.'cache';
 define('MORIARTY_HTTP_CACHE_DIR', $cache_dir);
 
-define('MORIARTY_HTTP_CACHE_READ_ONLY', TRUE);
+//define('MORIARTY_HTTP_CACHE_READ_ONLY', TRUE);
 define('MORIARTY_HTTP_CACHE_USE_STALE_ON_FAILURE', TRUE ); // use a cached response if network fails
 
 
-$config['resource_base'] = "http://open.vocab.org";
+$config['resource_base'] = "http://open-v20.vocab.org";
 $config['store_uri'] = "http://api.talis.com/stores/openvocab-dev1";
 $config['store_user'] = USER_NAME;
 $config['store_pwd'] = USER_PWD;
@@ -41,7 +41,7 @@ $config['vocab_prefix'] = "ov";
 $config['vocab_uri'] = "http://open.vocab.org/terms/";
 $config['vocab_name'] = "OpenVocab";
 
-$config['superusers'] = array('http://claimid.com/iandavis');
+$config['superusers'] = array('http://claimid.com/iandavis', 'http://vocab.org/letmein');
 
 
 

@@ -29,17 +29,37 @@
     <?php require_once('header.inc.php'); ?>
     <h2 class="bottom">Change Details</h2>
     <hr>
-      <div class="span-24">
+      <div class="span-15 colborder">
       <?php
-         echo '<p class="term"><strong>Term changed: </strong><a href="' . htmlspecialchars(local_link($model->term)) . '">' . htmlspecialchars($model->graph->get_label($model->term)) . '</a></span></p>';
-          echo '<p><strong>Date of change: </strong>'. htmlspecialchars($model->date) . '</p>';
+        echo '<p class="term"><strong>Term changed: </strong><a href="' . htmlspecialchars(local_link($model->term)) . '">' . htmlspecialchars($model->graph->get_label($model->term)) . '</a></span></p>';
+
+        printf('<p><strong>Date of change:</strong> %s</p>' . "\n", htmlspecialchars($model->date));
 
         if ($model->reason) {
           echo '<p><strong>Reason for change: </strong>'. htmlspecialchars($model->reason) . '</p>';
         }
+
+        if ($model->before) {
+          printf('<h3>Before</h3><pre>%s</pre>' . "\n", htmlspecialchars($model->before));
+        }
+
+        if ($model->after) {
+          printf('<h3>After</h3><pre>%s</pre>' . "\n", htmlspecialchars($model->after));
+        }
       ?>
       </div>
 
+      <div class="span-8 last">
+        <?php
+          if (isset($links)) {
+            echo '<p>Other formats: <ul>';
+            foreach ($links as $link) {
+              echo '<li><a type="' . htmlspecialchars($link['type']) . '" href="' . htmlspecialchars($link['href']) . '" title="' . htmlspecialchars($link['title']) . '">' . htmlspecialchars($link['title']) . "</a></li>";
+            }
+            echo '</ul></p>';
+          }
+        ?>
+      </div>
       <hr>
       <div id="footer" class="quiet append-bottom">
         <?php echo config_item('footer_html'); ?>

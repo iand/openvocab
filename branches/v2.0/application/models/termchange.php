@@ -8,7 +8,9 @@ class TermChange extends RDFModel {
     $this->define_field('term', 'http://www.w3.org/2004/02/skos/core#changeNote', 'inverse_scalar');
     $this->define_field('label', RDFS_LABEL);
     $this->define_field('reason', RDFS_COMMENT);
-    $this->define_field('date', DC_DATE);
+    $this->define_field('after', 'http://open.vocab.org/terms/afterGraph');
+    $this->define_field('before', 'http://open.vocab.org/terms/beforeGraph');
+    $this->define_field('date', 'http://purl.org/dc/elements/1.1/created', 'datetime_scalar');
     $this->define_field('openid', 'http://xmlns.com/foaf/0.1/openid', 'creator_resource');
   }
 
@@ -32,9 +34,15 @@ class TermChange extends RDFModel {
       }";
 
 
-    $query_uri = $default_store->uri . '/services/sparql?output=json&query=' . urlencode($query);
+    $query_uri = $default_store->uri . '/services/sparql?output=json&query=' . urlencode(trim($query));
 
+    $this->graph->set_namespace_mapping(config_item('vocab_prefix'), config_item('vocab_uri'));
     $this->graph->read_data($query_uri);
+/*
+    printf("<h2>query</h2><pre>%s</pre>", htmlspecialchars($query));
+    printf("<h2>query_uri</h2><pre>%s</pre>", htmlspecialchars($query_uri));
+    printf("<h2>DATA</h2><pre>%s</pre>", htmlspecialchars($this->graph->to_turtle()));
+*/
   }
 
 

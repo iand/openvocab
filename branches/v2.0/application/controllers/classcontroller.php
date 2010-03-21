@@ -24,7 +24,7 @@ class ClassController extends TermController {
 
       $slug = $this->input->post('slug');
       if ($slug) {
-        if (! preg_match('~[A-Z][a-zA-z0-9-]~', $slug) ) {
+        if (! preg_match('~^[A-Z][a-zA-z0-9-]+$~', $slug) ) {
           $validation_errors[] = array('field' => 'slug', 'message' => 'Last segment of URI must be mixed case, must start with an uppercase letter, contain only letters, numbers and hyphen.');
         }
         else if($this->term->exists_in_store()) {
@@ -40,6 +40,10 @@ class ClassController extends TermController {
 
         $response = $this->term->save_to_network($this->original);
         if ($response->is_success()) {
+          $this->change->after = $this->term->to_turtle();
+          $this->change->before = $this->original->to_turtle();
+
+          $response = $this->change->save_to_network();
           $this->term->load_from_network(FALSE); // repopulate cache
           redirect( local_link($this->term->get_uri()), 'location', 303);
           exit;
