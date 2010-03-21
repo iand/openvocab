@@ -16,6 +16,7 @@ class ChangeList extends RDFModel {
       prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
       prefix skos: <http://www.w3.org/2004/02/skos/core#>
       prefix dc: <http://purl.org/dc/elements/1.1/>
+      prefix foaf: <http://xmlns.com/foaf/0.1/>
       construct {
         ?term a ?type ;
               rdfs:label ?label ;
@@ -23,7 +24,9 @@ class ChangeList extends RDFModel {
               rdfs:isDefinedBy <" . $schema_uri . "> .
         ?note rdfs:label ?notelabel ;
               rdfs:comment ?notecomment ;
-              dc:date ?notedate .
+              dc:creator ?creator ;
+              dc:created ?notedate .
+        ?creator foaf:openid ?openid .
       } where {
         ?term a ?type ;
               rdfs:label ?label ;
@@ -31,12 +34,15 @@ class ChangeList extends RDFModel {
               rdfs:isDefinedBy <" . $schema_uri . "> .
         ?note rdfs:label ?notelabel ;
               rdfs:comment ?notecomment ;
-              dc:date ?notedate .
-      } offset " . $this->offset . " limit " . $this->max;
+              dc:creator ?creator ;
+              dc:created ?notedate .
+        ?creator foaf:openid ?openid .
 
+      } order by desc(?notedate) offset " . $this->offset . " limit " . $this->max;
 
     $query_uri = $default_store->uri . '/services/sparql?output=json&query=' . urlencode($query);
 
+    $this->graph->set_namespace_mapping(config_item('vocab_prefix'), config_item('vocab_uri'));
     $this->graph->read_data($query_uri);
   }
 
@@ -47,7 +53,7 @@ class ChangeList extends RDFModel {
     foreach ($terms as $term) {
       $change_uris = $this->graph->get_resource_triple_values($term, 'http://www.w3.org/2004/02/skos/core#changeNote');
       foreach ($change_uris as $change_uri) {
-        $date = $this->graph->get_first_literal($change_uri, 'http://purl.org/dc/elements/1.1/date');
+        $date = $this->graph->get_first_literal($change_uri, 'http://purl.org/dc/elements/1.1/created');
         $changes[$change_uri] = $date;
       }
     }

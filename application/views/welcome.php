@@ -29,6 +29,42 @@
 
 
     <div id="content" class="span-15 colborder">
+          <p>OpenVocab is a community maintained vocabulary intended for use on the Semantic Web, ideal for properties and classes that don't warrant the effort of creating or maintaining a full schema. OpenVocab allows anyone to create and modify vocabulary terms using their web browser.</p>
+
+
+      <?php
+        if (isset($property_count) && isset($class_count)) {
+          printf('<p>OpenVocab defines %s propert%s and %s class%s. ', $property_count, $property_count == 1 ? 'y' : 'ies', $class_count, $class_count == 1 ? '' : 'es');
+          if (isset($new_terms)) {
+            print('Recent additions include ');
+            for ($i = 0; $i < count($new_terms); $i++) {
+              $term_info = $new_terms[$i];
+              if ($i > 0) {
+                if ($i == count($new_terms) - 1) {
+                  echo ' and ';
+                }
+                else {
+                  echo ', ';
+                }
+              }
+              printf('<a href="%s">%s</a>', htmlspecialchars(local_link($term_info['uri'])), htmlspecialchars($term_info['label']));
+            }
+          }
+          print('</p>');
+        }
+        ?>
+        <?php
+
+        if (isset($recent_changes)) {
+          print "<h2>Recent Activity</h2><ul>\n";
+          foreach ($recent_changes as $change_info) {
+            printf('<li><span class="date">%s</span>: <a href="%s">%s</a> was %s by %s <a href="%s" class="details">details</a></li>' . "\n", htmlspecialchars($change_info['notedate']), htmlspecialchars(local_link($change_info['uri'])), htmlspecialchars($change_info['label']), htmlspecialchars(strtolower($change_info['notelabel'])), htmlspecialchars($change_info['openid']), htmlspecialchars(local_link($change_info['note'])));
+          }
+
+          print '</ul><p><a href="/changes">All changes</a></p>' . "\n";
+        }
+
+      ?>
 
     </div>
       <div class="span-8 last">
@@ -36,10 +72,6 @@
           <h2>News</h2>
           <p>Read the <a href="http://blog.iandavis.com/2008/12/introducing-openvocab">blog post</a> introducing OpenVocab.</p>
 
-        </div>
-        <div class="box">
-          <h2>About</h2>
-          <p>OpenVocab is a community maintained vocabulary intended for use on the Semantic Web, ideal for properties and classes that don't warrant the effort of creating or maintaining a full schema. OpenVocab allows anyone to create and modify vocabulary terms using their web browser. Each term is described using appropriate elements of RDF, RDFS and OWL. OpenVocab allows you to create any properties and classes; assign labels, comments and descriptions; declare domains and ranges and much more.</p>
         </div>
       </div>
       <hr class="space">

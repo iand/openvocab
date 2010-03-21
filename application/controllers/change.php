@@ -8,4 +8,5 @@ class Change extends RDFController {
   function load_view($data) {
     $this->load->view('change', $data);
   }
+
 }

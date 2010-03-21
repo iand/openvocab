@@ -30,9 +30,11 @@ class TermController extends Controller {
     }
     else if ($this->input->post('slug') && $is_property && preg_match('~[a-z][a-zA-z0-9-]~', $this->input->post('slug') )) {
       $this->term->set_uri(config_item('resource_base') . '/' . config_item('term_path') . config_item('term_delimiter') . $this->input->post('slug'));
+      $this->term->created = gmdate('Y-m-d\TH:i:s\Z');
     }
     else if ($this->input->post('slug') && ! $is_property && preg_match('~[A-Z][a-zA-z0-9-]~', $this->input->post('slug') )) {
       $this->term->set_uri(config_item('resource_base') . '/' . config_item('term_path') . config_item('term_delimiter') . $this->input->post('slug'));
+      $this->term->created = gmdate('Y-m-d\TH:i:s\Z');
     }
 
     $this->term->is_defined_by = config_item('resource_base') . '/' . config_item('term_path');
@@ -80,14 +82,24 @@ class TermController extends Controller {
   }
 
 
+
+
+
   function fill_change() {
     $this->change->set_uri(config_item('resource_base') . '/' . config_item('change_path') . '/' . strtolower(md5(uniqid('', TRUE))));
     $this->change->term = $this->term->get_uri();
     $this->change->creator = config_item('resource_base') . '/' . config_item('user_path') . '/' . strtolower(md5($this->session->userdata('openid')));
-    $this->change->label = 'A change to ' . $this->term->label;
-    $this->change->reason = trim($this->input->post('reason'));
     $this->change->openid = trim($this->session->userdata('openid'));
     $this->change->date = gmdate('Y-m-d\TH:i:s\Z');
+
+    if ($this->input->post('slug')) {
+      $this->change->label = 'Created';
+      $this->change->reason = 'New term';
+    }
+    else {
+      $this->change->label = 'Edited';
+      $this->change->reason = trim($this->input->post('reason'));
+    }
   }
 
 

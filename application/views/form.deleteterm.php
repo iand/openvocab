@@ -27,9 +27,17 @@
     <h2 class="bottom">Confirm Deletion of <?php echo htmlspecialchars($model->label . ' (' . $model->get_qname() . ')') ; ?></h2>
     <hr>
       <div class="span-24 last">
+      <?php if (isset($msg)) { echo "<div class=\"alert\">$msg</div>"; } ?>
+      <?php if (isset($error)) { echo "<div class=\"error\">$error</div>"; } ?>
+      <?php if (isset($success)) { echo "<div class=\"success\">$success</div>"; } ?>
         <p><strong>Full URI:</strong> <a href="<?= htmlspecialchars($model->get_uri()); ?>"><?= htmlspecialchars($model->get_uri()); ?></a></p>
 
         <form action="/forms/deleteterm" method="POST">
+          <p>
+            <label for="reason">Enter a reason for deletion: </label>
+            <input type="text" name="reason" id="reason" value="Removed due to spam"/>
+
+          </p>
           <p>
             <input type="hidden" name="confirm" id="confirm" value="1"/>
             <input type="hidden" name="uri" id="uri" value="<?php echo htmlspecialchars($model->get_uri());?>"/>

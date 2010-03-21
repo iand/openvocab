@@ -142,6 +142,24 @@
 
       ?>
 
+<?php
+
+
+      if ( count($model->changes)) {
+        echo '<h3 id="changes">Change History</h3><ul id="changelist">';
+        foreach ($model->changes as $change_uri) {
+          $date = $model->graph->get_first_literal($change_uri, 'http://purl.org/dc/elements/1.1/created');
+          echo '<li class="change"><span class="date">' . htmlspecialchars($date) . '</span>: Term was ';
+          echo $model->graph->get_first_literal($change_uri, RDFS_LABEL);
+          $creator_uri = $model->graph->get_first_resource($change_uri, DC_CREATOR);
+          $openid = $model->graph->get_first_resource($creator_uri, 'http://xmlns.com/foaf/0.1/openid');
+          echo ' by ' . htmlspecialchars($openid) . ' ';
+          echo ' <a href="' . htmlspecialchars(local_link($change_uri)) . '" class="details">details</a></li>';
+        }
+        echo '</ul>';
+      }
+
+?>
 
       </div>
       <div class="span-8 last">
@@ -170,33 +188,23 @@
           echo '<div class="quiet"><a href="/login">Login to edit this term</a></div>';
         }
 
-      if ( isset($history)) {
-        echo '<h2>Change History</h2><ul>';
-        foreach ($history as $item) {
-          echo '<li class="change">';
-          $date = strtotime($item['date']['value']);
-          echo '<span class="date">' . htmlspecialchars($item['date']['value']) . '</span> ' . htmlspecialchars($item['creator']['value']) . ' said "' .  htmlspecialchars($item['reason']['value']) . '"';
-          echo '</li>';
-        }
-        echo '</ul>';
-      }
     ?>
           <p>This term is considered to be <strong><?php echo htmlspecialchars($model->status); ?></strong>. Unstable terms may be edited at any time by anyone so their meaning may change unpredictably.</p>
         </div>
-      </div>
-      <hr class="space">
-      <h3>RDF</h3>
-<?php
-  if (isset($links)) {
-    echo '<p>Other formats: ';
-    foreach ($links as $link) {
-      echo '<a type="' . htmlspecialchars($link['type']) . '" href="' . htmlspecialchars($link['href']) . '" title="' . htmlspecialchars($link['title']) . '">' . htmlspecialchars($link['title']) . "</a> ";
-    }
-    echo '</p>';
-  }
-?>
 
-      <pre><code><?php echo htmlspecialchars($model->graph->to_turtle()); ?></code></pre>
+
+        <?php
+  if (isset($links)) {
+    echo '<p>Other formats: <ul>';
+    foreach ($links as $link) {
+      echo '<li><a type="' . htmlspecialchars($link['type']) . '" href="' . htmlspecialchars($link['href']) . '" title="' . htmlspecialchars($link['title']) . '">' . htmlspecialchars($link['title']) . "</a></li>";
+    }
+    echo '</ul></p>';
+  }
+        ?>
+      </div>
+
+
       <hr>
       <div id="footer" class="quiet append-bottom">
         <?php echo config_item('footer_html'); ?>
