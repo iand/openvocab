@@ -70,6 +70,7 @@
       <div class="span-8 last">
         <div class="box">
           <h2>News</h2>
+          <p>This is a test deployment of OpenVocab version 2. Please <a href="http://code.google.com/p/openvocab/issues/list">report errors and comments on this application</a>.</p>
           <p>Read the <a href="http://blog.iandavis.com/2008/12/introducing-openvocab">blog post</a> introducing OpenVocab.</p>
 
         </div>
