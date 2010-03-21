@@ -44,7 +44,7 @@ prefix owl: <http://www.w3.org/2002/07/owl#>
       prefix foaf: <http://xmlns.com/foaf/0.1/>
       select ?term ?note ?label ?notelabel ?notedate ?openid {
         ?term rdfs:label ?label ;
-              skos:changeNote ?note ;
+              skos:note ?note ;
               rdfs:isDefinedBy <" . $schema_uri . "> .
         ?note rdfs:label ?notelabel ;
               dc:created ?notedate ;

@@ -24,7 +24,7 @@
 
     foreach ($model->changes as $change_uri) {
       print('  <entry>' . "\n");
-      $terms = $model->graph->get_subjects_where_resource('http://www.w3.org/2004/02/skos/core#changeNote', $change_uri);
+      $terms = $model->graph->get_subjects_where_resource('http://www.w3.org/2004/02/skos/core#note', $change_uri);
       $term_qname = $model->graph->uri_to_qname($terms[0]);
 
       $label = $model->graph->get_first_literal($change_uri, RDFS_LABEL);

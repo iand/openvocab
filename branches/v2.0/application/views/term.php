@@ -182,6 +182,8 @@
             echo ' | ';
             printf('<a href="/forms/deleteterm?uri=%s">Delete</a>', htmlspecialchars(urlencode($uri)) );
           }
+          echo ' | ';
+          printf('<a href="/forms/recdelete?uri=%s">Recommend Deletion</a>', htmlspecialchars(urlencode($uri)) );
           echo '</div>';
         }
         else {
@@ -190,19 +192,26 @@
 
     ?>
           <p>This term is considered to be <strong><?php echo htmlspecialchars($model->status); ?></strong>. Unstable terms may be edited at any time by anyone so their meaning may change unpredictably.</p>
+<?php
+          printf('<p>You can <a href="/forms/rectesting?uri=%s">recommend this term is upgraded to a status of \'testing\'</a>. Terms may be suitable for moving to \'testing\' status when they have received a significant amount of experimental usage.</p>', htmlspecialchars(urlencode($uri)) );
+?>
+
         </div>
-
-
-        <?php
-  if (isset($links)) {
-    echo '<p>Other formats: <ul>';
-    foreach ($links as $link) {
-      echo '<li><a type="' . htmlspecialchars($link['type']) . '" href="' . htmlspecialchars($link['href']) . '" title="' . htmlspecialchars($link['title']) . '">' . htmlspecialchars($link['title']) . "</a></li>";
-    }
-    echo '</ul></p>';
-  }
-        ?>
       </div>
+
+<?php
+        if (isset($links)) {
+          echo '<div class="span-24  append-bottom">Get the data for this page: ';
+          $done_first = 0;
+          foreach ($links as $link) {
+            if ($done_first) echo ', ';
+            echo '<a type="' . htmlspecialchars($link['type']) . '" href="' . htmlspecialchars($link['href']) . '" title="' . htmlspecialchars($link['title']) . '">' . htmlspecialchars($link['title']) . "</a>";
+            $done_first = 1;
+          }
+          echo '</div>';
+        }
+?>
+
 
 
       <hr>

@@ -20,7 +20,7 @@ class ChangeList extends RDFModel {
       construct {
         ?term a ?type ;
               rdfs:label ?label ;
-              skos:changeNote ?note ;
+              skos:note ?note ;
               rdfs:isDefinedBy <" . $schema_uri . "> .
         ?note rdfs:label ?notelabel ;
               rdfs:comment ?notecomment ;
@@ -30,7 +30,7 @@ class ChangeList extends RDFModel {
       } where {
         ?term a ?type ;
               rdfs:label ?label ;
-              skos:changeNote ?note ;
+              skos:note ?note ;
               rdfs:isDefinedBy <" . $schema_uri . "> .
         ?note rdfs:label ?notelabel ;
               rdfs:comment ?notecomment ;
@@ -51,7 +51,7 @@ class ChangeList extends RDFModel {
 
     $changes = array();
     foreach ($terms as $term) {
-      $change_uris = $this->graph->get_resource_triple_values($term, 'http://www.w3.org/2004/02/skos/core#changeNote');
+      $change_uris = $this->graph->get_resource_triple_values($term, 'http://www.w3.org/2004/02/skos/core#note');
       foreach ($change_uris as $change_uri) {
         $date = $this->graph->get_first_literal($change_uri, 'http://purl.org/dc/elements/1.1/created');
         $changes[$change_uri] = $date;

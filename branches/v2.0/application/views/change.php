@@ -49,17 +49,19 @@
       ?>
       </div>
 
-      <div class="span-8 last">
-        <?php
-          if (isset($links)) {
-            echo '<p>Other formats: <ul>';
-            foreach ($links as $link) {
-              echo '<li><a type="' . htmlspecialchars($link['type']) . '" href="' . htmlspecialchars($link['href']) . '" title="' . htmlspecialchars($link['title']) . '">' . htmlspecialchars($link['title']) . "</a></li>";
-            }
-            echo '</ul></p>';
+      <?php
+        if (isset($links)) {
+          echo '<div class="span-24  append-bottom">Get the data for this page: ';
+          $done_first = 0;
+          foreach ($links as $link) {
+            if ($done_first) echo ', ';
+            echo '<a type="' . htmlspecialchars($link['type']) . '" href="' . htmlspecialchars($link['href']) . '" title="' . htmlspecialchars($link['title']) . '">' . htmlspecialchars($link['title']) . "</a>";
+            $done_first = 1;
           }
-        ?>
-      </div>
+          echo '</div>';
+        }
+      ?>
+
       <hr>
       <div id="footer" class="quiet append-bottom">
         <?php echo config_item('footer_html'); ?>

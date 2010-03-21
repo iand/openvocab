@@ -32,37 +32,37 @@
       <div class="span-24">
 
       <p>The 30 most recent changes to the <?= htmlspecialchars(config_item('vocab_name')); ?> RDF schema:</p>
-      <table>
-        <tr>
-          <th>Date</th>
-          <th>Term changed</th>
-          <th>Reason for change</th>
-          <th>Changed by</th>
-          <th>&nbsp;</th>
-        </tr>
+        <ul>
         <?php
-          foreach ($model->changes as $uri) {
+          foreach ($model->changes as $change_uri) {
+            $terms = $model->graph->get_subjects_where_resource('http://www.w3.org/2004/02/skos/core#note', $change_uri);
+            $term_qname = $model->graph->uri_to_qname($terms[0]);
 
-            $terms = $model->graph->get_subjects_where_resource('http://www.w3.org/2004/02/skos/core#changeNote', $uri);
-
-            echo '<tr class="term">';
-            $date = $model->graph->get_first_literal($uri, 'http://purl.org/dc/elements/1.1/created');
-            echo '<td valign="top"><span class="date">' . htmlspecialchars($date) . '</span></td>';
-            echo '<td valign="top"><span class="label"><a href="' . htmlspecialchars(local_link($terms[0])) . '">'.  htmlspecialchars($model->graph->get_label($terms[0])) . '</a></span></td>';
-            $comment = $model->graph->get_first_literal($uri, RDFS_COMMENT);
-            echo '<td valign="top"><span class="comment">' . htmlspecialchars($comment). '</span></td>';
-            $creator_uri = $model->graph->get_first_resource($uri, DC_CREATOR);
+            $label = $model->graph->get_first_literal($change_uri, RDFS_LABEL);
+            $comment = $model->graph->get_first_literal($change_uri, RDFS_COMMENT);
+            $date = $model->graph->get_first_literal($change_uri, 'http://purl.org/dc/elements/1.1/created');
+            $creator_uri = $model->graph->get_first_resource($change_uri, DC_CREATOR);
             $openid = $model->graph->get_first_resource($creator_uri, 'http://xmlns.com/foaf/0.1/openid');
-            echo '<td valign="top"><span class="creator">' . htmlspecialchars($openid) . '</span></td>';
-            echo '<td valign="top"><span class="details"><a href="' . htmlspecialchars(local_link($uri)) . '">details</a></span></td>';
-            echo '</tr>';
+
+            printf('<li><span class="date">%s</span>: <a href="%s">%s</a> was %s by %s <a href="%s" class="details">details</a></li>' . "\n", htmlspecialchars($date), htmlspecialchars(local_link($terms[0])), htmlspecialchars($term_qname), htmlspecialchars($label), htmlspecialchars($openid), htmlspecialchars(local_link($change_uri)));
           }
-
-          //printf("<pre>%s</pre>", htmlspecialchars($model->graph->to_turtle()));
-
         ?>
-      </table>
+        </ul>
       </div>
+
+      <?php
+        if (isset($links)) {
+          echo '<div class="span-24  append-bottom">Get the data for this page: ';
+          $done_first = 0;
+          foreach ($links as $link) {
+            if ($done_first) echo ', ';
+            echo '<a type="' . htmlspecialchars($link['type']) . '" href="' . htmlspecialchars($link['href']) . '" title="' . htmlspecialchars($link['title']) . '">' . htmlspecialchars($link['title']) . "</a>";
+            $done_first = 1;
+          }
+          echo '</div>';
+        }
+      ?>
+
 
       <hr>
       <div id="footer" class="quiet append-bottom">

@@ -35,7 +35,7 @@
   <body>
     <div class="container">
     <?php require_once('header.inc.php'); ?>
-    <h2 class="bottom">Terms</h2>
+    <h2 class="top bottom">Terms</h2>
     <hr>
       <div class="span-24">
 
@@ -67,7 +67,20 @@
         ?>
       </div>
 
+      <?php
+        if (isset($links)) {
+          echo '<div class="span-24  append-bottom">Get the data for this page: ';
+          $done_first = 0;
+          foreach ($links as $link) {
+            if ($done_first) echo ', ';
+            echo '<a type="' . htmlspecialchars($link['type']) . '" href="' . htmlspecialchars($link['href']) . '" title="' . htmlspecialchars($link['title']) . '">' . htmlspecialchars($link['title']) . "</a>";
+            $done_first = 1;
+          }
+          echo '</div>';
+        }
+      ?>
       <hr>
+
       <div id="footer" class="quiet append-bottom">
         <?php echo config_item('footer_html'); ?>
       </div>

@@ -16,14 +16,14 @@ class TermWithChanges extends Term {
       prefix dc: <http://purl.org/dc/elements/1.1/>
       prefix foaf: <http://xmlns.com/foaf/0.1/>
       construct {
-         <" . $this->_uri . "> skos:changeNote ?note .
+         <" . $this->_uri . "> skos:note ?note .
         ?note rdfs:label ?notelabel ;
               rdfs:comment ?notecomment ;
               dc:creator ?creator ;
               dc:created ?notedate .
         ?creator foaf:openid ?openid .
       } where {
-         <" . $this->_uri . "> skos:changeNote ?note .
+         <" . $this->_uri . "> skos:note ?note .
         ?note rdfs:label ?notelabel ;
               rdfs:comment ?notecomment ;
               dc:creator ?creator ;
@@ -48,7 +48,7 @@ class TermWithChanges extends Term {
   function read_changes_array($short_name, $property_uri) {
 
     $changes = array();
-    $change_uris = $this->graph->get_resource_triple_values($this->_uri, 'http://www.w3.org/2004/02/skos/core#changeNote');
+    $change_uris = $this->graph->get_resource_triple_values($this->_uri, 'http://www.w3.org/2004/02/skos/core#note');
     foreach ($change_uris as $change_uri) {
       $date = $this->graph->get_first_literal($change_uri, 'http://purl.org/dc/elements/1.1/created');
       $changes[$change_uri] = $date;
