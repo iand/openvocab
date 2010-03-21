@@ -193,7 +193,9 @@
     ?>
           <p>This term is considered to be <strong><?php echo htmlspecialchars($model->status); ?></strong>. Unstable terms may be edited at any time by anyone so their meaning may change unpredictably.</p>
 <?php
+        if ($this->session->userdata('logged_in') ) {
           printf('<p>You can <a href="/forms/rectesting?uri=%s">recommend this term is upgraded to a status of \'testing\'</a>. Terms may be suitable for moving to \'testing\' status when they have received a significant amount of experimental usage.</p>', htmlspecialchars(urlencode($uri)) );
+        }
 ?>
 
         </div>
