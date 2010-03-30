@@ -4,7 +4,6 @@ class Login extends Controller {
 
   function __construct() {
     parent::Controller();
-
     $this->lang->load('openid', 'english');
     $this->load->library('openid');
     $this->load->helper('url');
