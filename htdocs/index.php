@@ -1,58 +1,134 @@
 <?php
-require_once 'localconfig.inc.php'; // defines the STORE_URI, USER_NAME and USER_PWD constants
+/*
+ * localconfig.inc.php is not in SVN for security reasons. It defines two constants:
+ * USER_NAME - the account name for accessing the store
+ * USER_PWD - the password for writing to the store
+*/
 
-define('SP_MARKDOWNDESCRIPTION', 'http://open.vocab.org/terms/markdownDescription');
-define('VOCAB_SCHEMA', 'http://open.vocab.org/terms');
-define('VOCAB_NS', VOCAB_SCHEMA . '/');
-define('OV_APP_DIR', dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR."app".DIRECTORY_SEPARATOR);
-define('WWW_LIB_DIR', dirname(dirname(dirname(dirname(__FILE__)))).DIRECTORY_SEPARATOR."lib".DIRECTORY_SEPARATOR);
-define('OV_LIB_DIR', dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR."lib".DIRECTORY_SEPARATOR);
-define('MORIARTY_DIR', WWW_LIB_DIR . 'moriarty' . DIRECTORY_SEPARATOR);
+require_once "./localconfig.inc.php";
 
-define('OV_ARC_DIR', WWW_LIB_DIR . "arc_2008_11_18");
-define('OV_KONSTRUKT_DIR', WWW_LIB_DIR . "konstrukt" . DIRECTORY_SEPARATOR . "lib");
-define('MORIARTY_ARC_DIR', OV_ARC_DIR . DIRECTORY_SEPARATOR);
-define('MORIARTY_OPT_NO_ETAG', TRUE);
-if (file_exists(dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'cache')) {
-  define('MORIARTY_HTTP_CACHE_DIR', dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'cache');
+ini_set ( "memory_limit", "64M");
+if (file_exists('/home/iand/web/lib/')) {
+  define('LIB_DIR', '/home/iand/web/lib/');
+}
+else {
+  define('LIB_DIR', '/var/www/lib/');
 }
 
-//define('MORIARTY_HTTP_CACHE_READ_ONLY', TRUE ); // always use a cached response if one exists
-define('MORIARTY_HTTP_CACHE_USE_STALE_ON_FAILURE', TRUE ); // use a cached respone if network fails
+/*
+|---------------------------------------------------------------
+| PHP ERROR REPORTING LEVEL
+|---------------------------------------------------------------
+|
+| By default CI runs with error reporting set to ALL.  For security
+| reasons you are encouraged to change this when your site goes live.
+| For more info visit:  http://www.php.net/error_reporting
+|
+*/
+  error_reporting(E_ALL);
 
-ini_set('include_path',
-  ini_get('include_path')
-  .PATH_SEPARATOR.OV_APP_DIR
-  .PATH_SEPARATOR.OV_KONSTRUKT_DIR
-  .PATH_SEPARATOR.OV_ARC_DIR
-  .PATH_SEPARATOR.MORIARTY_DIR
-  .PATH_SEPARATOR.'/home/iand/wip/paget2'
-);
+/*
+|---------------------------------------------------------------
+| SYSTEM FOLDER NAME
+|---------------------------------------------------------------
+|
+| This variable must contain the name of your "system" folder.
+| Include the path if the folder is not in the same  directory
+| as this file.
+|
+| NO TRAILING SLASH!
+|
+*/
+  $system_folder = LIB_DIR . "codeigniter/system";
 
-//require_once OV_LIB_DIR . DIRECTORY_SEPARATOR . 'httpclient' . DIRECTORY_SEPARATOR . 'http.php';
-//require_once OV_LIB_DIR . DIRECTORY_SEPARATOR . 'sasl' . DIRECTORY_SEPARATOR . 'sasl.php';
-require_once OV_APP_DIR . 'utility.func.php';
+/*
+|---------------------------------------------------------------
+| APPLICATION FOLDER NAME
+|---------------------------------------------------------------
+|
+| If you want this front controller to use a different "application"
+| folder then the default one you can set its name here. The folder
+| can also be renamed or relocated anywhere on your server.
+| For more info please see the user guide:
+| http://codeigniter.com/user_guide/general/managing_apps.html
+|
+|
+| NO TRAILING SLASH!
+|
+*/
+  $application_folder = "../application";
+
+/*
+|===============================================================
+| END OF USER CONFIGURABLE SETTINGS
+|===============================================================
+*/
 
 
-error_reporting(E_ALL);
+/*
+|---------------------------------------------------------------
+| SET THE SERVER PATH
+|---------------------------------------------------------------
+|
+| Let's attempt to determine the full-server path to the "system"
+| folder in order to reduce the possibility of path problems.
+| Note: We only attempt this if the user hasn't specified a
+| full server path.
+|
+*/
+if (strpos($system_folder, '/') === FALSE)
+{
+  if (function_exists('realpath') AND @realpath(dirname(__FILE__)) !== FALSE)
+  {
+    $system_folder = realpath(dirname(__FILE__)).'/'.$system_folder;
+  }
+}
+else
+{
+  // Swap directory separators to Unix style for consistency
+  $system_folder = str_replace("\\", "/", $system_folder);
+}
 
-require_once 'konstrukt/konstrukt.inc.php';
+/*
+|---------------------------------------------------------------
+| DEFINE APPLICATION CONSTANTS
+|---------------------------------------------------------------
+|
+| EXT   - The file extension.  Typically ".php"
+| FCPATH  - The full server path to THIS file
+| SELF    - The name of THIS file (typically "index.php")
+| BASEPATH  - The full server path to the "system" folder
+| APPPATH - The full server path to the "application" folder
+|
+*/
+define('EXT', '.'.pathinfo(__FILE__, PATHINFO_EXTENSION));
+define('FCPATH', __FILE__);
+define('SELF', pathinfo(__FILE__, PATHINFO_BASENAME));
+define('BASEPATH', $system_folder.'/');
 
-date_default_timezone_set('Europe/London');
-set_error_handler('k_exceptions_error_handler');
-spl_autoload_register('k_autoload');
-k()
-  // Enable file logging
-  ->setLog(dirname(__FILE__) . '/logs/debug.log')
-  // Uncomment the nexct line to enable in-browser debugging
-  //->setDebug()
-  // Dispatch request
-  ->run('Root')
-  ->out();
+if (is_dir($application_folder))
+{
+  define('APPPATH', $application_folder.'/');
+}
+else
+{
+  if ($application_folder == '')
+  {
+    $application_folder = 'application';
+  }
 
+  define('APPPATH', BASEPATH.$application_folder.'/');
+}
 
+/*
+|---------------------------------------------------------------
+| LOAD THE FRONT CONTROLLER
+|---------------------------------------------------------------
+|
+| And away we go...
+|
+*/
+require_once BASEPATH.'codeigniter/CodeIgniter'.EXT;
 
-//$application = new Root();
-//$application->dispatch();
-
-?>
+/* End of file index.php */
+/* Location: ./index.php */
