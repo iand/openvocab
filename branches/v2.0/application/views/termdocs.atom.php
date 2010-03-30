@@ -36,6 +36,7 @@
 
       printf('    <title>%s by %s</title>' . "\n", htmlspecialchars($label), htmlspecialchars($openid));
       printf('    <link href="%s"/>' . "\n", htmlspecialchars($change_uri));
+      printf('    <id>%s</id>' . "\n", htmlspecialchars($change_uri));
       printf('    <updated>%s</updated>' . "\n", htmlspecialchars($date));
       printf('    <author><name>%s</name></author>' . "\n", htmlspecialchars($openid));
       printf('    <summary>%s</summary>' . "\n", htmlspecialchars($comment));

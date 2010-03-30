@@ -189,38 +189,6 @@ class Term extends RDFModel {
   }
 
 
-  // Validation of URI fields
-  function uri_check($url) {
-    $ret = TRUE;
-
-    $url = substr($url,-1) == "/" ? substr($url,0,-1) : $url;
-    if ( !$url || $url=="" ) return TRUE;
-    if ( !( $parts = @parse_url( $url ) ) ) $ret = FALSE;
-    else {
-        if ( !isset($parts['scheme']) ) $ret = FALSE;
-        else if ( !isset($parts['host']) ) $ret = FALSE;
-        else if ( $parts['scheme'] != "http"
-          && $parts['scheme'] != "https"
-          && $parts['scheme'] != "info"
-          && $parts['scheme'] != "tag"
-          && strtolower($parts['scheme']) != "urn"
-          ) $ret = FALSE;
-        else if ( !eregi( "^[0-9a-z]([-.]?[0-9a-z])*.[a-z]{2,4}$", $parts['host'], $regs ) ) $ret = FALSE;
-        else if (isset($parts['user']) && !eregi( "^([0-9a-z-]|[_])*$", $parts['user'], $regs ) ) $ret = FALSE;
-        else if (isset($parts['pass']) && !eregi( "^([0-9a-z-]|[_])*$", $parts['pass'], $regs ) ) $ret = FALSE;
-        else if (isset($parts['path']) && !eregi( "^[0-9a-z/_.@~-]*$", $parts['path'], $regs ) ) $ret = FALSE;
-        else if (isset($parts['query']) && !eregi( "^[0-9a-z?&=#,]*$", $parts['query'], $regs ) ) $ret = FALSE;
-    }
-
-    if ($ret) {
-      return TRUE;
-    }
-    else {
-      return FALSE;
-    }
-  }
-
-
 
 }
 
