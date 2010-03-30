@@ -46,7 +46,7 @@
         <?php
           foreach ($model->properties as $uri) {
             echo '<p class="term"><span class="label"><a href="' . htmlspecialchars(local_link($uri)) . '">' . htmlspecialchars($model->graph->get_label($uri)) . '</a></span>';
-            echo '<br /><span class="uri">' . htmlspecialchars($uri) . '</span>';
+            echo '<br /><span class="uri quiet">' . htmlspecialchars($uri) . '</span>';
             $comment = $model->graph->get_first_literal($uri, RDFS_COMMENT);
             if ($comment) echo '<br /><span class="comment">' . htmlspecialchars($comment). '</span>';
             echo '</p>';
@@ -59,7 +59,7 @@
         <?php
           foreach ($model->classes as $uri) {
             echo '<p class="term"><span class="label"><a href="' . htmlspecialchars(local_link($uri)) . '">' . htmlspecialchars($model->graph->get_label($uri)) . '</a></span>';
-            echo '<br /><span class="uri">' . htmlspecialchars($uri) . '</span>';
+            echo '<br /><span class="uri quiet">' . htmlspecialchars($uri) . '</span>';
             $comment = $model->graph->get_first_literal($uri, RDFS_COMMENT);
             if ($comment) echo '<br /><span class="comment">' . htmlspecialchars($comment). '</span>';
             echo '</p>';

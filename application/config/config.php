@@ -9,8 +9,8 @@ define('MORIARTY_HTTP_CACHE_DIR', $cache_dir);
 define('MORIARTY_HTTP_CACHE_USE_STALE_ON_FAILURE', TRUE ); // use a cached response if network fails
 
 
-$config['resource_base'] = "http://open-v20.vocab.org";
-$config['store_uri'] = "http://api.talis.com/stores/openvocab-dev1";
+$config['resource_base'] = "http://open.vocab.org";
+$config['store_uri'] = "http://api.talis.com/stores/openvocab";
 $config['store_user'] = USER_NAME;
 $config['store_pwd'] = USER_PWD;
 
@@ -41,7 +41,7 @@ $config['vocab_prefix'] = "ov";
 $config['vocab_uri'] = "http://open.vocab.org/terms/";
 $config['vocab_name'] = "OpenVocab";
 
-$config['superusers'] = array('http://claimid.com/iandavis', 'http://vocab.org/letmein');
+$config['superusers'] = array('http://claimid.com/iandavis', 'http://iandavis.myopenid.com/', 'http://vocab.org/letmein');
 
 
 
@@ -219,7 +219,7 @@ $config['directory_trigger']  = 'd'; // experimental not currently in use
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 4;
+$config['log_threshold'] = 0;
 
 /*
 |--------------------------------------------------------------------------
@@ -230,7 +230,7 @@ $config['log_threshold'] = 4;
 | system/logs/ folder.  Use a full server path with trailing slash.
 |
 */
-$config['log_path'] = '/home/iand/web/vocab.org/open-v20/logs/';
+//$config['log_path'] = '/home/iand/web/vocab.org/open-v20/logs/';
 /*
 |--------------------------------------------------------------------------
 | Date Format for Logs

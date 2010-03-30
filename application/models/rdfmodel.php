@@ -2,6 +2,7 @@
 require_once MORIARTY_DIR . 'moriarty.inc.php';
 require_once MORIARTY_DIR . 'credentials.class.php';
 require_once MORIARTY_DIR . 'httprequestfactory.class.php';
+require_once MORIARTY_DIR . 'httpresponse.class.php';
 require_once MORIARTY_DIR . 'simplegraph.class.php';
 require_once MORIARTY_DIR . 'store.class.php';
 
@@ -37,6 +38,7 @@ class RDFModel extends Model {
     $this->_fdefs[] = array('short_name' => $short_name, 'property_uri' => $property_uri, 'handler' => $handler);
 
   }
+
 
   /**
    * Define a field on the object that maps to a property. The order in which
@@ -101,13 +103,37 @@ class RDFModel extends Model {
    **/
   function write_literal_scalar($short_name, $property_uri) {
     $this->graph->remove_property_values($this->_uri, $property_uri);
-    if (isset($this->$short_name)) $this->graph->add_literal_triple($this->_uri, $property_uri, $this->$short_name);
+    if (!empty($this->$short_name)) $this->graph->add_literal_triple($this->_uri, $property_uri, $this->$short_name);
   }
 
   /**
    * Initialise a literal scalar field.
    **/
   function init_literal_scalar($short_name, $property_uri) {
+    $this->$short_name = '';
+  }
+
+
+  /**
+   * Read a literal value with english language from the graph into a scalar field.
+   **/
+  function read_literal_scalar_en($short_name, $property_uri) {
+    $this->$short_name = $this->graph->get_first_literal($this->_uri, $property_uri, NULL);
+    if ($this->$short_name !== NULL ) $this->_has_data = TRUE;
+  }
+
+  /**
+   * Write a literal value with english language held in a scalar field to the graph, replacing any existing values.
+   **/
+  function write_literal_scalar_en($short_name, $property_uri) {
+    $this->graph->remove_property_values($this->_uri, $property_uri);
+    if (!empty($this->$short_name)) $this->graph->add_literal_triple($this->_uri, $property_uri, $this->$short_name, 'en');
+  }
+
+  /**
+   * Initialise a literal scalar with english language field.
+   **/
+  function init_literal_scalar_en($short_name, $property_uri) {
     $this->$short_name = '';
   }
 
@@ -125,7 +151,7 @@ class RDFModel extends Model {
    **/
   function write_resource_scalar($short_name, $property_uri) {
     $this->graph->remove_property_values($this->_uri, $property_uri);
-    if (isset($this->$short_name)) $this->graph->add_resource_triple($this->_uri, $property_uri, $this->$short_name);
+    if (!empty($this->$short_name)) $this->graph->add_resource_triple($this->_uri, $property_uri, $this->$short_name);
   }
 
 
@@ -151,7 +177,7 @@ class RDFModel extends Model {
     $this->graph->remove_property_values($this->_uri, $property_uri);
     if (is_array($this->$short_name)) {
       foreach ($this->$short_name as $value) {
-        if (isset($value)) {
+        if (!empty($value)) {
           $this->graph->add_literal_triple($this->_uri, $property_uri, $value);
         }
       }
@@ -181,7 +207,7 @@ class RDFModel extends Model {
     $this->graph->remove_property_values($this->_uri, $property_uri);
     if (is_array($this->$short_name)) {
       foreach ($this->$short_name as $value) {
-        if (isset($value)) {
+        if (!empty($value)) {
           $this->graph->add_resource_triple($this->_uri, $property_uri, $value);
         }
       }
@@ -213,7 +239,7 @@ class RDFModel extends Model {
    **/
   function write_inverse_scalar($short_name, $property_uri) {
     $this->graph->remove_property_values($this->_uri, $property_uri);
-    if (isset($this->$short_name)) $this->graph->add_resource_triple($this->$short_name, $property_uri, $this->_uri);
+    if (!empty($this->$short_name)) $this->graph->add_resource_triple($this->$short_name, $property_uri, $this->_uri);
   }
 
 
@@ -237,7 +263,9 @@ class RDFModel extends Model {
    **/
   function write_datetime_scalar($short_name, $property_uri) {
     $this->graph->remove_property_values($this->_uri, $property_uri);
-    if (isset($this->$short_name)) $this->graph->add_literal_triple($this->_uri, $property_uri, $this->$short_name, null, 'http://www.w3.org/2001/XMLSchema#dateTime');
+    if (!empty($this->$short_name)) {
+      $this->graph->add_literal_triple($this->_uri, $property_uri, $this->$short_name, null, 'http://www.w3.org/2001/XMLSchema#dateTime');
+    }
   }
 
   /**
@@ -293,9 +321,10 @@ class RDFModel extends Model {
   }
 
 
-  function save_to_network($previous = NULL) {
+  function save_to_network($previous = NULL, $save_entire_graph = FALSE) {
+
     if ($previous !== NULL && $previous->_has_data) {
-      $cs = $this->get_diff($previous);
+      $cs = $this->get_diff($previous, $save_entire_graph);
       $store = new Store(config_item('store_uri'), new Credentials(config_item('store_user'), config_item('store_pwd')));
       $mb = $store->get_metabox();
       $changesets = $cs->get_subjects_of_type(CS_CHANGESET);
@@ -303,82 +332,119 @@ class RDFModel extends Model {
         ( count($cs->get_resource_triple_values($changesets[0], CS_REMOVAL)) > 0 || count($cs->get_resource_triple_values($changesets[0], CS_ADDITION)) > 0 )
 
         ) {
-        //printf("<p><strong>Posting a changeset</strong></p><pre>%s</pre>", htmlspecialchars($cs->to_turtle()));
+//printf("<p><strong>Posting a changeset</strong></p><pre>%s</pre>", htmlspecialchars($cs->to_turtle()));
+//exit;
         return $mb->apply_changeset_rdfxml( $cs->to_rdfxml() );
+      }
+      else {
+        return new HttpResponse(200);
       }
     }
     else {
       $this->write_fields();
-
       $store = $this->get_writeable_store();
       return $store->store_data($this->graph);
     }
   }
 
-  function get_diff($previous) {
+  function get_diff($previous, $save_entire_graph = FALSE) {
 
     $this->write_fields();
     $previous->write_fields();
 
+    $subjects = array();
+    if ($save_entire_graph) {
+      $subjects = array_unique( $this->graph->get_subjects() + $previous->graph->get_subjects() );
+    }
+    else {
+      $subjects[] = $this->_uri;
+    }
 
-    $node_index= 0;
-    $cs = new SimpleGraph();
-    $cs_subj = '_:cs' . $node_index++;
-    $cs->add_resource_triple($cs_subj, RDF_TYPE, CS_CHANGESET);
-    $cs->add_resource_triple($cs_subj, CS_SUBJECTOFCHANGE, $this->_uri);
-    $cs->add_literal_triple($cs_subj, CS_CHANGEREASON, "Update");
-    $cs->add_literal_triple($cs_subj, CS_CREATEDDATE, gmdate(DATE_ATOM));
-    $cs->add_literal_triple($cs_subj, CS_CREATORNAME, "Moriarty");
 
     $additions = SimpleGraph::diff($this->graph->get_index(), $previous->graph->get_index());
     $removals = SimpleGraph::diff($previous->graph->get_index(), $this->graph->get_index());
 
-    if (count($removals) > 0 && array_key_exists($this->_uri, $removals)) {
-      foreach ($removals[$this->_uri] as $p => $p_list) {
-        foreach ($p_list as $p_info) {
-          $node = '_:r' . $node_index;
-          $cs->add_resource_triple($cs_subj, CS_REMOVAL, $node);
-          $cs->add_resource_triple($node, RDF_TYPE, RDF_STATEMENT);
-          $cs->add_resource_triple($node, RDF_SUBJECT, $this->_uri);
-          $cs->add_resource_triple($node, RDF_PREDICATE, $p);
-          if ($p_info['type'] === 'literal')  {
-            $dt = array_key_exists('datatype', $p_info) ? $p_info['datatype'] : null;
-            $lang = array_key_exists('lang', $p_info) ? $p_info['lang'] : null;
-            $cs->add_literal_triple($node, RDF_OBJECT, $p_info['value'], $lang, $dt);
+    $node_index= 0;
+    $cs = new SimpleGraph();
+
+    foreach ($subjects as $subject_uri) {
+      if ( (count($removals) > 0 && array_key_exists($subject_uri, $removals) )
+          || ( count($additions) > 0 && array_key_exists($subject_uri, $additions) )
+          ) {
+        $cs_subj = '_:cs' . $node_index++;
+        $cs->add_resource_triple($cs_subj, RDF_TYPE, CS_CHANGESET);
+        $cs->add_resource_triple($cs_subj, CS_SUBJECTOFCHANGE, $subject_uri);
+        $cs->add_literal_triple($cs_subj, CS_CHANGEREASON, "Update");
+        $cs->add_literal_triple($cs_subj, CS_CREATEDDATE, gmdate(DATE_ATOM));
+        $cs->add_literal_triple($cs_subj, CS_CREATORNAME, "Moriarty");
+
+
+        if (count($removals) > 0 && array_key_exists($subject_uri, $removals)) {
+          foreach ($removals[$subject_uri] as $p => $p_list) {
+            foreach ($p_list as $p_info) {
+              $node = '_:r' . $node_index;
+              $cs->add_resource_triple($cs_subj, CS_REMOVAL, $node);
+              $cs->add_resource_triple($node, RDF_TYPE, RDF_STATEMENT);
+              $cs->add_resource_triple($node, RDF_SUBJECT, $subject_uri);
+              $cs->add_resource_triple($node, RDF_PREDICATE, $p);
+              if ($p_info['type'] === 'literal')  {
+                $dt = array_key_exists('datatype', $p_info) ? $p_info['datatype'] : null;
+                $lang = array_key_exists('lang', $p_info) ? $p_info['lang'] : null;
+                $cs->add_literal_triple($node, RDF_OBJECT, $p_info['value'], $lang, $dt);
+              }
+              else {
+                $cs->add_resource_triple($node, RDF_OBJECT, $p_info['value']);
+              }
+              $node_index++;
+            }
           }
-          else {
-            $cs->add_resource_triple($node, RDF_OBJECT, $p_info['value']);
+        }
+
+        if (count($additions) > 0 && array_key_exists($subject_uri, $additions)) {
+          foreach ($additions[$subject_uri] as $p => $p_list) {
+            foreach ($p_list as $p_info) {
+              $node = '_:a' . $node_index;
+              $cs->add_resource_triple($cs_subj, CS_ADDITION, $node);
+              $cs->add_resource_triple($node, RDF_TYPE, RDF_STATEMENT);
+              $cs->add_resource_triple($node, RDF_SUBJECT, $subject_uri);
+              $cs->add_resource_triple($node, RDF_PREDICATE, $p);
+              if ($p_info['type'] === 'literal')  {
+                $dt = array_key_exists('datatype', $p_info) ? $p_info['datatype'] : null;
+                $lang = array_key_exists('lang', $p_info) ? $p_info['lang'] : null;
+                $cs->add_literal_triple($node, RDF_OBJECT, $p_info['value'], $lang, $dt);
+              }
+              else {
+                $cs->add_resource_triple($node, RDF_OBJECT, $p_info['value']);
+              }
+              $node_index++;
+            }
           }
-          $node_index++;
         }
       }
     }
-
-    if (count($additions) > 0 && array_key_exists($this->_uri, $additions)) {
-      foreach ($additions[$this->_uri] as $p => $p_list) {
-        foreach ($p_list as $p_info) {
-          $node = '_:a' . $node_index;
-          $cs->add_resource_triple($cs_subj, CS_ADDITION, $node);
-          $cs->add_resource_triple($node, RDF_TYPE, RDF_STATEMENT);
-          $cs->add_resource_triple($node, RDF_SUBJECT, $this->_uri);
-          $cs->add_resource_triple($node, RDF_PREDICATE, $p);
-          if ($p_info['type'] === 'literal')  {
-            $dt = array_key_exists('datatype', $p_info) ? $p_info['datatype'] : null;
-            $lang = array_key_exists('lang', $p_info) ? $p_info['lang'] : null;
-            $cs->add_literal_triple($node, RDF_OBJECT, $p_info['value'], $lang, $dt);
-          }
-          else {
-            $cs->add_resource_triple($node, RDF_OBJECT, $p_info['value']);
-          }
-          $node_index++;
-        }
-      }
-    }
-
 /*
 printf("<h2>This Graph</h2><pre>%s</pre>", htmlspecialchars($this->graph->to_turtle()));
 printf("<h2>Previous Graph</h2><pre>%s</pre>", htmlspecialchars($previous->graph->to_turtle()));
-printf("<h2>Changsest</h2><pre>%s</pre>", htmlspecialchars($cs->to_turtle()));
+printf("<h2>Changeset</h2><pre>%s</pre>", htmlspecialchars($cs->to_turtle()));
+
+$changesets = $cs->get_subjects_of_type(CS_CHANGESET);
+foreach ($changesets as $changeset_uri) {
+  $removals = $cs->get_resource_triple_values($changeset_uri, CS_REMOVAL);
+  foreach ($removals as $removal_uri) {
+    $removal_subject = $cs->get_first_resource($removal_uri,RDF_SUBJECT);
+    $removal_predicate = $cs->get_first_resource($removal_uri,RDF_PREDICATE);
+    $removal_object_list = $cs->get_subject_property_values($removal_uri,RDF_OBJECT);
+    if ($removal_object_list[0]['type'] == 'literal') {
+      printf('<pre>ask { &lt;%s&gt; &lt;%s&gt; """%s"""%s%s. }</pre>', htmlspecialchars($removal_subject), htmlspecialchars($removal_predicate), htmlspecialchars($removal_object_list[0]['value']), $removal_object_list[0]['lang']!=null ? '@' . $removal_object_list[0]['lang'] : '', $removal_object_list[0]['datatype']!=null ? '^^' . $removal_object_list[0]['datatype'] : '' );
+    }
+    else {
+      printf('<pre>ask { &lt;%s&gt; &lt;%s&gt; &lt;%s&gt;. }</pre>', htmlspecialchars($removal_subject), htmlspecialchars($removal_predicate), htmlspecialchars($removal_object_list[0]['value']));
+    }
+  }
+}
+
+
+exit;
 */
     return $cs;
 
