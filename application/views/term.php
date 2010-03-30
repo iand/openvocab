@@ -169,13 +169,9 @@
           echo '<div class="actions">';
           if ($model->is_property()) {
             printf('<a href="/forms/editprop?uri=%s" accesskey="e">Edit</a>', htmlspecialchars(urlencode($uri)) );
-//            echo ' | ';
-//            printf('<a href="/forms/newprop?subPropertyOf=%s">Add sub-property</a>', htmlspecialchars(urlencode($uri)) );
           }
           else {
             printf('<a href="/forms/editclass?uri=%s" accesskey="e">Edit</a>', htmlspecialchars(urlencode($uri)) );
-//            echo ' | ';
-//            printf('<a href="/forms/newclass?subClassOf=%s">Add sub-class</a>', htmlspecialchars(urlencode($uri)) );
           }
 
           if ( in_array($this->session->userdata('openid'), config_item('superusers')) ) {

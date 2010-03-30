@@ -34,6 +34,7 @@
       $openid = $model->graph->get_first_resource($creator_uri, 'http://xmlns.com/foaf/0.1/openid');
 
       printf('    <title>%s %s by %s</title>' . "\n", htmlspecialchars($term_qname), htmlspecialchars(strtolower($label)), htmlspecialchars($openid));
+      printf('    <id>%s</id>' . "\n", htmlspecialchars($change_uri));
       printf('    <link href="%s"/>' . "\n", htmlspecialchars($change_uri));
       printf('    <updated>%s</updated>' . "\n", htmlspecialchars($date));
       printf('    <author><name>%s</name></author>' . "\n", htmlspecialchars($openid));

@@ -24,7 +24,7 @@ class ClassController extends TermController {
 
       $slug = $this->input->post('slug');
       if ($slug) {
-        if (! preg_match('~^[A-Z][a-zA-z0-9-]+$~', $slug) ) {
+        if (! preg_match('~^[A-Z][a-zA-Z0-9-]+$~', $slug) ) {
           $validation_errors[] = array('field' => 'slug', 'message' => 'Last segment of URI must be mixed case, must start with an uppercase letter, contain only letters, numbers and hyphen.');
         }
         else if($this->term->exists_in_store()) {
