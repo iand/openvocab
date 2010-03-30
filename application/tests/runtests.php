@@ -1,13 +1,5 @@
 <?php
-/*
- * localconfig.inc.php is not in SVN for security reasons. It defines two constants:
- * USER_NAME - the account name for accessing the store
- * USER_PWD - the password for writing to the store
-*/
-
-require_once "./localconfig.inc.php";
-
-ini_set ( "memory_limit", "64M");
+//define('BASEPATH', dirname(__file__));
 if (file_exists('/home/iand/web/lib/')) {
   define('LIB_DIR', '/home/iand/web/lib/');
 }
@@ -15,17 +7,24 @@ else {
   define('LIB_DIR', '/var/www/lib/');
 }
 
-/*
-|---------------------------------------------------------------
-| PHP ERROR REPORTING LEVEL
-|---------------------------------------------------------------
-|
-| By default CI runs with error reporting set to ALL.  For security
-| reasons you are encouraged to change this when your site goes live.
-| For more info visit:  http://www.php.net/error_reporting
-|
-*/
-  error_reporting(E_ALL);
+define('MORIARTY_DIR', LIB_DIR . 'moriarty' . DIRECTORY_SEPARATOR);
+define('MORIARTY_ARC_DIR', LIB_DIR . 'arc_2008_11_18' . DIRECTORY_SEPARATOR);
+define('MORIARTY_TEST_DIR', MORIARTY_DIR . 'tests/');
+
+if (!defined('PHPUnit_MAIN_METHOD')) {
+  define('PHPUnit_MAIN_METHOD', 'OpenVocab_AllTests::main');
+}
+
+require_once 'PHPUnit/Framework.php';
+require_once 'PHPUnit/TextUI/TestRunner.php';
+
+require_once MORIARTY_TEST_DIR . 'fakehttprequest.class.php';
+require_once MORIARTY_TEST_DIR . 'fakerequestfactory.class.php';
+
+require_once dirname(__file__) . '/termdescription.test.php';
+require_once dirname(__file__) . '/rdfmodel.test.php';
+
+
 
 /*
 |---------------------------------------------------------------
@@ -120,15 +119,27 @@ else
   define('APPPATH', BASEPATH.$application_folder.'/');
 }
 
-/*
-|---------------------------------------------------------------
-| LOAD THE FRONT CONTROLLER
-|---------------------------------------------------------------
-|
-| And away we go...
-|
-*/
-require_once BASEPATH.'codeigniter/CodeIgniter'.EXT;
 
-/* End of file index.php */
-/* Location: ./index.php */
+
+class OpenVocab_AllTests
+{
+    public static function main()
+    {
+        PHPUnit_TextUI_TestRunner::run(self::suite());
+    }
+
+    public static function suite()
+    {
+        $suite = new PHPUnit_Framework_TestSuite('OpenVocab Tests');
+
+//        $suite->addTestSuite('TermDescriptionTest');
+        $suite->addTestSuite('RDFModelTest');
+        return $suite;
+    }
+}
+
+if (PHPUnit_MAIN_METHOD == 'OpenVocab_AllTests::main') {
+    OpenVocab_AllTests::main();
+}
+
+?>
