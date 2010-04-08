@@ -45,6 +45,11 @@ $route['scaffolding_trigger'] = "";
 
 if (config_item('term_delimiter') == '/') {
   $route[config_item('term_path') . '/([a-zA-Z0-9-]+)'] = "terms/do_303/$1";
+  $route[config_item('term_path') . '/([a-zA-Z0-9-]+)\.html'] = "terms/do_html_redirect/$1";
+  $route[config_item('term_path') . '/([a-zA-Z0-9-]+)\.rdf'] = "terms/do_rdf_redirect/$1";
+  $route[config_item('term_path') . '/([a-zA-Z0-9-]+)\.ttl'] = "terms/do_ttl_redirect/$1";
+  $route[config_item('term_path') . '/([a-zA-Z0-9-]+)\.json'] = "terms/do_json_redirect/$1";
+
   $route[config_item('term_document_path') . '/([a-zA-Z0-9-]+)'] = "termdocs/do_conneg/$1";
   $route[config_item('term_document_path') . '/([a-zA-Z0-9-]+)\.html'] = "termdocs/do_html/$1";
   $route[config_item('term_document_path') . '/([a-zA-Z0-9-]+)\.rdf'] = "termdocs/do_rdf/$1";
