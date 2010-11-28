@@ -58,7 +58,7 @@ class Auth_OpenID_TrustRoot {
      * @return The URL upon which relying party discovery should be
      * run in order to verify the return_to URL
      */
-    static function buildDiscoveryURL($realm)
+    function buildDiscoveryURL($realm)
     {
         $parsed = Auth_OpenID_TrustRoot::_parse($realm);
 
@@ -269,7 +269,7 @@ class Auth_OpenID_TrustRoot {
      * @return bool $matches Whether the URL matches against the
      * trust root
      */
-    static function match($trust_root, $url)
+    function match($trust_root, $url)
     {
         $trust_root_parsed = Auth_OpenID_TrustRoot::_parse($trust_root);
         $url_parsed = Auth_OpenID_TrustRoot::_parse($url);
@@ -341,7 +341,7 @@ class Auth_OpenID_TrustRoot {
  * @returns: The endpoint URL or None if the endpoint is not a
  * relying party endpoint.
  */
-function filter_extractReturnURL($endpoint)
+function filter_extractReturnURL(&$endpoint)
 {
     if ($endpoint->matchTypes(array(Auth_OpenID_RP_RETURN_TO_URL_TYPE))) {
         return $endpoint;
@@ -394,14 +394,14 @@ function Auth_OpenID_returnToMatches($allowed_return_to_urls, $return_to)
  * Given a relying party discovery URL return a list of return_to
  * URLs.
  */
-function Auth_OpenID_getAllowedReturnURLs($relying_party_url, $fetcher,
+function Auth_OpenID_getAllowedReturnURLs($relying_party_url, &$fetcher,
               $discover_function=null)
 {
     if ($discover_function === null) {
         $discover_function = array('Auth_Yadis_Yadis', 'discover');
     }
 
-    $xrds_parse_cb = array('Auth_OpenID_ServiceEndpoint', 'consumerFromXRDS');
+    $xrds_parse_cb = array('Auth_OpenID_ServiceEndpoint', 'fromXRDS');
 
     list($rp_url_after_redirects, $endpoints) =
         Auth_Yadis_getServiceEndpoints($relying_party_url, $xrds_parse_cb,
@@ -413,7 +413,7 @@ function Auth_OpenID_getAllowedReturnURLs($relying_party_url, $fetcher,
     }
 
     call_user_func_array($discover_function,
-                         array($relying_party_url, &$fetcher));
+                         array($relying_party_url, $fetcher));
 
     $return_to_urls = array();
     $matching_endpoints = Auth_OpenID_extractReturnURL($endpoints);
@@ -435,7 +435,7 @@ function Auth_OpenID_getAllowedReturnURLs($relying_party_url, $fetcher,
  *
  * @return true if the return_to URL is valid for the realm
  */
-function Auth_OpenID_verifyReturnTo($realm_str, $return_to, $fetcher,
+function Auth_OpenID_verifyReturnTo($realm_str, $return_to, &$fetcher,
               $_vrfy='Auth_OpenID_getAllowedReturnURLs')
 {
     $disco_url = Auth_OpenID_TrustRoot::buildDiscoveryURL($realm_str);
@@ -445,7 +445,7 @@ function Auth_OpenID_verifyReturnTo($realm_str, $return_to, $fetcher,
     }
 
     $allowable_urls = call_user_func_array($_vrfy,
-                           array($disco_url, $fetcher));
+                           array($disco_url, &$fetcher));
 
     // The realm_str could not be parsed.
     if ($allowable_urls === false) {
@@ -459,3 +459,4 @@ function Auth_OpenID_verifyReturnTo($realm_str, $return_to, $fetcher,
     }
 }
 
+?>

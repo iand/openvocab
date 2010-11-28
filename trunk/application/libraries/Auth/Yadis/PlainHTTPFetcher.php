@@ -122,7 +122,7 @@ class Auth_Yadis_PlainHTTPFetcher extends Auth_Yadis_HTTPFetcher {
             $code = $http_code[1];
 
             if (in_array($code, array('301', '302'))) {
-                $url = $this->_findRedirect($headers, $url);
+                $url = $this->_findRedirect($headers);
                 $redir = true;
             } else {
                 $redir = false;
@@ -246,3 +246,4 @@ class Auth_Yadis_PlainHTTPFetcher extends Auth_Yadis_HTTPFetcher {
     }
 }
 
+?>

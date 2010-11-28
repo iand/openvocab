@@ -20,7 +20,7 @@
 /**
  * The library version string
  */
-define('Auth_OpenID_VERSION', '2.2.2');
+define('Auth_OpenID_VERSION', '2.1.2');
 
 /**
  * Require the fetcher code.
@@ -102,7 +102,9 @@ define('Auth_OpenID_digits',
 define('Auth_OpenID_punct',
        "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~");
 
-Auth_OpenID_include_init();
+if (Auth_OpenID_getMathLib() === null) {
+    Auth_OpenID_setNoMathSupport();
+}
 
 /**
  * The OpenID utility function class.
@@ -136,9 +138,6 @@ class Auth_OpenID {
      *
      * Returns an empty array if neither GET nor POST was used, or if
      * POST was used but php://input cannot be opened.
-     *
-     * See background:
-     * http://lists.openidenabled.com/pipermail/dev/2007-March/000395.html
      *
      * @access private
      */
@@ -191,7 +190,7 @@ class Auth_OpenID {
             }
 
             list($k, $v) = $parts;
-            $data[urldecode($k)] = urldecode($v);
+            $data[$k] = urldecode($v);
         }
 
         return $data;
@@ -279,7 +278,7 @@ class Auth_OpenID {
             }
 
             list($key, $value) = $pair;
-            $new_parts[urldecode($key)] = urldecode($value);
+            $new_parts[$key] = urldecode($value);
         }
 
         return $new_parts;
@@ -296,7 +295,7 @@ class Auth_OpenID {
      * pairs from $data into a URL query string
      * (e.g. "username=bob&id=56").
      */
-    static function httpBuildQuery($data)
+    function httpBuildQuery($data)
     {
         $pairs = array();
         foreach ($data as $key => $value) {
@@ -324,7 +323,7 @@ class Auth_OpenID {
      * @return string $url The original URL with the new parameters added.
      *
      */
-    static function appendArgs($url, $args)
+    function appendArgs($url, $args)
     {
         if (count($args) == 0) {
             return $url;
@@ -368,7 +367,7 @@ class Auth_OpenID {
      * @return string $url The URL resulting from assembling the
      * specified components.
      */
-    static function urlunparse($scheme, $host, $port = null, $path = '/',
+    function urlunparse($scheme, $host, $port = null, $path = '/',
                         $query = '', $fragment = '')
     {
 
@@ -444,7 +443,7 @@ class Auth_OpenID {
      *
      * @access private
      */
-    static function intval($value)
+    function intval($value)
     {
         $re = "/^\\d+$/";
 
@@ -498,7 +497,7 @@ class Auth_OpenID {
         }
     }
 
-    static function filter($callback, &$sequence)
+    function filter($callback, &$sequence)
     {
         $result = array();
 
@@ -511,7 +510,7 @@ class Auth_OpenID {
         return $result;
     }
 
-    static function update(&$dest, &$src)
+    function update(&$dest, &$src)
     {
         foreach ($src as $k => $v) {
             $dest[$k] = $v;
@@ -532,7 +531,7 @@ class Auth_OpenID {
         error_log($message);
     }
 
-    static function autoSubmitHTML($form, $title="OpenId transaction in progress")
+    function autoSubmitHTML($form, $title="OpenId transaction in progress")
     {
         return("<html>".
                "<head><title>".
@@ -550,14 +549,4 @@ class Auth_OpenID {
                "</html>");
     }
 }
-
-/*
- * Function to run when this file is included.
- * Abstracted to a function to make life easier
- * for some PHP optimizers.
- */
-function Auth_OpenID_include_init() {
-  if (Auth_OpenID_getMathLib() === null) {
-    Auth_OpenID_setNoMathSupport();
-  }
-}
+?>
