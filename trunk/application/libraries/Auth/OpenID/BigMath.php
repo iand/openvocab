@@ -361,6 +361,7 @@ function Auth_OpenID_math_extensions()
 /**
  * Detect which (if any) math library is available
  */
+/*
 function Auth_OpenID_detectMathLibrary($exts)
 {
     $loaded = false;
@@ -374,6 +375,53 @@ function Auth_OpenID_detectMathLibrary($exts)
 
     return false;
 }
+*/
+
+// see http://sourcecookbook.com/en/recipes/60/janrain-s-php-openid-library-fixed-for-php-5-3-and-how-i-did-it
+
+      function Auth_OpenID_detectMathLibrary($exts)
+      {
+          $loaded = false;
+       
+         // > This if is the only modification to the function <
+         if ( ! function_exists( 'dl' ) )
+          {
+              return false;
+          }
+       
+          foreach ($exts as $extension)
+          {
+          // See if the extension specified is already loaded.
+              if ($extension['extension'] &&
+                  extension_loaded($extension['extension']))
+              {
+                  $loaded = true;
+              }
+              // Try to load dynamic modules.
+              if (!$loaded)
+              {
+                  foreach ($extension['modules'] as $module)
+                  {
+                      if (@dl($module . "." . PHP_SHLIB_SUFFIX))
+                      {
+                          $loaded = true;
+                          break;
+                      }
+                  }
+              }
+       
+              // If the load succeeded, supply an instance of
+              // Auth_OpenID_MathWrapper which wraps the specified
+              // module's functionality.
+              if ($loaded)
+              {
+                  return $extension;
+              }
+          }
+          return false;
+      }
+       
+
 
 /**
  * {@link Auth_OpenID_getMathLib} checks for the presence of long
