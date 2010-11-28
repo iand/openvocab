@@ -105,7 +105,7 @@ class Auth_Yadis_DiscoveryResult {
     function usedYadisLocation()
     {
         // Was the Yadis protocol's indirection used?
-        return ($this->xrds_uri && $this->normalized_uri != $this->xrds_uri);
+        return $this->normalized_uri != $this->xrds_uri;
     }
 
     function isXRDS()
@@ -141,7 +141,7 @@ function Auth_Yadis_getServiceEndpoints($input_url, $xrds_parse_func,
     }
 
     $yadis_result = call_user_func_array($discover_func,
-                                         array($input_url, &$fetcher));
+                                         array($input_url, $fetcher));
 
     if ($yadis_result === null) {
         return array($input_url, array());
@@ -196,7 +196,7 @@ function Auth_Yadis_getServiceEndpoints($input_url, $xrds_parse_func,
  * The filter functions (whose names appear in the array passed to
  * services()) take the following form:
  *
- * <pre>  function myFilter($service) {
+ * <pre>  function myFilter(&$service) {
  *       // Query $service object here.  Return true if the service
  *       // matches your query; false if not.
  *  }</pre>
@@ -207,7 +207,7 @@ function Auth_Yadis_getServiceEndpoints($input_url, $xrds_parse_func,
  * this contrived example):
  *
  * <pre>
- *  function URIMatcher($service) {
+ *  function URIMatcher(&$service) {
  *      foreach ($service->getElements('xrd:URI') as $uri) {
  *          if (preg_match("/some_pattern/",
  *                         $service->parser->content($uri))) {
@@ -269,7 +269,7 @@ class Auth_Yadis_Yadis {
     /**
      * @access private
      */
-   static function _getHeader($header_list, $names)
+    static function _getHeader($header_list, $names)
     {
         foreach ($header_list as $name => $value) {
             foreach ($names as $n) {
@@ -379,4 +379,4 @@ class Auth_Yadis_Yadis {
     }
 }
 
-
+?>

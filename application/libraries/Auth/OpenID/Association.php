@@ -94,7 +94,7 @@ class Auth_OpenID_Association {
      * @return association An {@link Auth_OpenID_Association}
      * instance.
      */
-    static function fromExpiresIn($expires_in, $handle, $secret, $assoc_type)
+    function fromExpiresIn($expires_in, $handle, $secret, $assoc_type)
     {
         $issued = time();
         $lifetime = $expires_in;
@@ -132,7 +132,7 @@ class Auth_OpenID_Association {
         $handle, $secret, $issued, $lifetime, $assoc_type)
     {
         if (!in_array($assoc_type,
-                      Auth_OpenID_getSupportedAssociationTypes(), true)) {
+                      Auth_OpenID_getSupportedAssociationTypes())) {
             $fmt = 'Unsupported association type (%s)';
             trigger_error(sprintf($fmt, $assoc_type), E_USER_ERROR);
         }
@@ -327,7 +327,7 @@ class Auth_OpenID_Association {
      *
      * @access private
      */
-    function _makePairs($message)
+    function _makePairs(&$message)
     {
         $signed = $message->getArg(Auth_OpenID_OPENID_NS, 'signed');
         if (!$signed || Auth_OpenID::isFailure($signed)) {
@@ -352,7 +352,7 @@ class Auth_OpenID_Association {
      *
      * @access private
      */
-    function getMessageSignature($message)
+    function getMessageSignature(&$message)
     {
         $pairs = $this->_makePairs($message);
         return base64_encode($this->sign($pairs));
@@ -364,7 +364,7 @@ class Auth_OpenID_Association {
      *
      * @access private
      */
-    function checkMessageSignature($message)
+    function checkMessageSignature(&$message)
     {
         $sig = $message->getArg(Auth_OpenID_OPENID_NS,
                                 'sig');
@@ -469,16 +469,18 @@ function Auth_OpenID_getOnlyEncryptedOrder()
     return $result;
 }
 
-function Auth_OpenID_getDefaultNegotiator()
+function &Auth_OpenID_getDefaultNegotiator()
 {
-    return new Auth_OpenID_SessionNegotiator(
+    $x = new Auth_OpenID_SessionNegotiator(
                  Auth_OpenID_getDefaultAssociationOrder());
+    return $x;
 }
 
-function Auth_OpenID_getEncryptedNegotiator()
+function &Auth_OpenID_getEncryptedNegotiator()
 {
-    return new Auth_OpenID_SessionNegotiator(
+    $x = new Auth_OpenID_SessionNegotiator(
                  Auth_OpenID_getOnlyEncryptedOrder());
+    return $x;
 }
 
 /**
@@ -608,3 +610,4 @@ class Auth_OpenID_SessionNegotiator {
     }
 }
 
+?>

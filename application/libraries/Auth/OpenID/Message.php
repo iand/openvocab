@@ -477,7 +477,7 @@ class Auth_OpenID_Message {
         }
     }
 
-    static function fromOpenIDArgs($openid_args)
+    function fromOpenIDArgs($openid_args)
     {
         // Takes an array.
 
@@ -594,7 +594,7 @@ class Auth_OpenID_Message {
         return $this->_openid_ns_uri;
     }
 
-    static function fromKVForm($kvform_string)
+    function fromKVForm($kvform_string)
     {
         // Create a Message from a KVForm string
         return Auth_OpenID_Message::fromOpenIDArgs(
@@ -917,4 +917,4 @@ class Auth_OpenID_Message {
     }
 }
 
-
+?>

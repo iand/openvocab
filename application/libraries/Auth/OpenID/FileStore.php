@@ -367,7 +367,7 @@ class Auth_OpenID_FileStore extends Auth_OpenID_OpenIDStore {
         }
 
         if ( abs($timestamp - time()) > $Auth_OpenID_SKEW ) {
-            return false;
+            return False;
         }
 
         if ($server_url) {
@@ -519,7 +519,7 @@ class Auth_OpenID_FileStore extends Auth_OpenID_OpenIDStore {
     /**
      * @access private
      */
-    static function _mkdtemp($dir)
+    function _mkdtemp($dir)
     {
         foreach (range(0, 4) as $i) {
             $name = $dir . strval(DIRECTORY_SEPARATOR) . strval(getmypid()) .
@@ -615,4 +615,4 @@ class Auth_OpenID_FileStore extends Auth_OpenID_OpenIDStore {
     }
 }
 
-
+?>

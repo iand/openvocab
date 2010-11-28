@@ -30,44 +30,50 @@ require_once 'Auth/OpenID.php';
  * @access private
  * @package OpenID
  */
-class Auth_OpenID_MathLibrary {
-    /**
-     * Given a long integer, returns the number converted to a binary
-     * string.  This function accepts long integer values of arbitrary
-     * magnitude and uses the local large-number math library when
-     * available.
-     *
-     * @param integer $long The long number (can be a normal PHP
-     * integer or a number created by one of the available long number
-     * libraries)
-     * @return string $binary The binary version of $long
-     */
+class Auth_OpenID_MathLibrary
+{
+/**
+ * Given a long integer, returns the number converted to a binary
+ * string.  This function accepts long integer values of arbitrary
+ * magnitude and uses the local large-number math library when
+ * available.
+ *
+ * @param integer $long The long number (can be a normal PHP
+ * integer or a number created by one of the available long number
+ * libraries)
+ * @return string $binary The binary version of $long
+ */
     function longToBinary($long)
     {
         $cmp = $this->cmp($long, 0);
-        if ($cmp < 0) {
+        if ($cmp < 0)
+        {
             $msg = __FUNCTION__ . " takes only positive integers.";
             trigger_error($msg, E_USER_ERROR);
             return null;
         }
 
-        if ($cmp == 0) {
+        if ($cmp == 0)
+        {
             return "\x00";
         }
 
         $bytes = array();
 
-        while ($this->cmp($long, 0) > 0) {
+        while ($this->cmp($long, 0) > 0)
+        {
             array_unshift($bytes, $this->mod($long, 256));
             $long = $this->div($long, pow(2, 8));
         }
 
-        if ($bytes && ($bytes[0] > 127)) {
+        if ($bytes && ($bytes[0] > 127))
+        {
             array_unshift($bytes, 0);
         }
 
         $string = '';
-        foreach ($bytes as $byte) {
+        foreach ($bytes as $byte)
+        {
             $string .= pack('C', $byte);
         }
 
@@ -85,7 +91,8 @@ class Auth_OpenID_MathLibrary {
      */
     function binaryToLong($str)
     {
-        if ($str === null) {
+        if ($str === null)
+        {
             return null;
         }
 
@@ -95,13 +102,15 @@ class Auth_OpenID_MathLibrary {
 
         $n = $this->init(0);
 
-        if ($bytes && ($bytes[0] > 127)) {
+        if ($bytes && ($bytes[0] > 127))
+        {
             trigger_error("bytesToNum works only for positive integers.",
-                          E_USER_WARNING);
+                E_USER_WARNING);
             return null;
         }
 
-        foreach ($bytes as $byte) {
+        foreach ($bytes as $byte)
+        {
             $n = $this->mul($n, pow(2, 8));
             $n = $this->add($n, $byte);
         }
@@ -113,7 +122,8 @@ class Auth_OpenID_MathLibrary {
     {
         $b64 = base64_decode($str);
 
-        if ($b64 === false) {
+        if ($b64 === false)
+        {
             return false;
         }
 
@@ -146,12 +156,16 @@ class Auth_OpenID_MathLibrary {
         // Used as the key for the duplicate cache
         $rbytes = $this->longToBinary($stop);
 
-        if (array_key_exists($rbytes, $duplicate_cache)) {
+        if (array_key_exists($rbytes, $duplicate_cache))
+        {
             list($duplicate, $nbytes) = $duplicate_cache[$rbytes];
-        } else {
-            if ($rbytes[0] == "\x00") {
+        } else
+        {
+            if ($rbytes[0] == "\x00")
+            {
                 $nbytes = Auth_OpenID::bytes($rbytes) - 1;
-            } else {
+            } else
+            {
                 $nbytes = Auth_OpenID::bytes($rbytes);
             }
 
@@ -161,17 +175,19 @@ class Auth_OpenID_MathLibrary {
             // duplicated range.
             $duplicate = $this->mod($mxrand, $stop);
 
-            if (count($duplicate_cache) > 10) {
+            if (count($duplicate_cache) > 10)
+            {
                 $duplicate_cache = array();
             }
 
             $duplicate_cache[$rbytes] = array($duplicate, $nbytes);
         }
 
-        do {
+        do
+        {
             $bytes = "\x00" . Auth_OpenID_CryptUtil::getBytes($nbytes);
             $n = $this->binaryToLong($bytes);
-            // Keep looping if this value is in the low duplicated range
+        // Keep looping if this value is in the low duplicated range
         } while ($this->cmp($n, $duplicate) < 0);
 
         return $this->mod($n, $stop);
@@ -187,7 +203,8 @@ class Auth_OpenID_MathLibrary {
  * @access private
  * @package OpenID
  */
-class Auth_OpenID_BcMathWrapper extends Auth_OpenID_MathLibrary{
+class Auth_OpenID_BcMathWrapper extends Auth_OpenID_MathLibrary
+{
     var $type = 'bcmath';
 
     function add($x, $y)
@@ -239,8 +256,10 @@ class Auth_OpenID_BcMathWrapper extends Auth_OpenID_MathLibrary{
     {
         $square = $this->mod($base, $modulus);
         $result = 1;
-        while($this->cmp($exponent, 0) > 0) {
-            if ($this->mod($exponent, 2)) {
+        while($this->cmp($exponent, 0) > 0)
+        {
+            if ($this->mod($exponent, 2))
+            {
                 $result = $this->mod($this->mul($result, $square), $modulus);
             }
             $square = $this->mod($this->mul($square, $square), $modulus);
@@ -251,9 +270,11 @@ class Auth_OpenID_BcMathWrapper extends Auth_OpenID_MathLibrary{
 
     function powmod($base, $exponent, $modulus)
     {
-        if (function_exists('bcpowmod')) {
+        if (function_exists('bcpowmod'))
+        {
             return bcpowmod($base, $exponent, $modulus);
-        } else {
+        } else
+        {
             return $this->_powmod($base, $exponent, $modulus);
         }
     }
@@ -273,7 +294,8 @@ class Auth_OpenID_BcMathWrapper extends Auth_OpenID_MathLibrary{
  * @access private
  * @package OpenID
  */
-class Auth_OpenID_GmpMathWrapper extends Auth_OpenID_MathLibrary{
+class Auth_OpenID_GmpMathWrapper extends Auth_OpenID_MathLibrary
+{
     var $type = 'gmp';
 
     function add($x, $y)
@@ -344,16 +366,18 @@ function Auth_OpenID_math_extensions()
 {
     $result = array();
 
-    if (!defined('Auth_OpenID_BUGGY_GMP')) {
+    if (!defined('Auth_OpenID_BUGGY_GMP'))
+    {
         $result[] =
             array('modules' => array('gmp', 'php_gmp'),
-                  'extension' => 'gmp',
-                  'class' => 'Auth_OpenID_GmpMathWrapper');
+            'extension' => 'gmp',
+            'class' => 'Auth_OpenID_GmpMathWrapper');
     }
 
-    $result[] = array('modules' => array('bcmath', 'php_bcmath'),
-                      'extension' => 'bcmath',
-                      'class' => 'Auth_OpenID_BcMathWrapper');
+    $result[] = array(
+        'modules' => array('bcmath', 'php_bcmath'),
+        'extension' => 'bcmath',
+        'class' => 'Auth_OpenID_BcMathWrapper');
 
     return $result;
 }
@@ -361,67 +385,48 @@ function Auth_OpenID_math_extensions()
 /**
  * Detect which (if any) math library is available
  */
-/*
 function Auth_OpenID_detectMathLibrary($exts)
 {
     $loaded = false;
 
-	$hasDl = function_exists('dl');
-    foreach ($exts as $extension) {
-        if (extension_loaded($extension['extension'])) {
+    if ( ! function_exists( 'dl' ) )
+    {
+        return false;
+    }
+    
+    foreach ($exts as $extension)
+    {
+    // See if the extension specified is already loaded.
+        if ($extension['extension'] &&
+            extension_loaded($extension['extension']))
+        {
+            $loaded = true;
+        }
+
+        // Try to load dynamic modules.
+        if (!$loaded)
+        {
+            foreach ($extension['modules'] as $module)
+            {
+                if (@dl($module . "." . PHP_SHLIB_SUFFIX))
+                {
+                    $loaded = true;
+                    break;
+                }
+            }
+        }
+
+        // If the load succeeded, supply an instance of
+        // Auth_OpenID_MathWrapper which wraps the specified
+        // module's functionality.
+        if ($loaded)
+        {
             return $extension;
         }
     }
 
     return false;
 }
-*/
-
-// see http://sourcecookbook.com/en/recipes/60/janrain-s-php-openid-library-fixed-for-php-5-3-and-how-i-did-it
-
-      function Auth_OpenID_detectMathLibrary($exts)
-      {
-          $loaded = false;
-       
-         // > This if is the only modification to the function <
-         if ( ! function_exists( 'dl' ) )
-          {
-              return false;
-          }
-       
-          foreach ($exts as $extension)
-          {
-          // See if the extension specified is already loaded.
-              if ($extension['extension'] &&
-                  extension_loaded($extension['extension']))
-              {
-                  $loaded = true;
-              }
-              // Try to load dynamic modules.
-              if (!$loaded)
-              {
-                  foreach ($extension['modules'] as $module)
-                  {
-                      if (@dl($module . "." . PHP_SHLIB_SUFFIX))
-                      {
-                          $loaded = true;
-                          break;
-                      }
-                  }
-              }
-       
-              // If the load succeeded, supply an instance of
-              // Auth_OpenID_MathWrapper which wraps the specified
-              // module's functionality.
-              if ($loaded)
-              {
-                  return $extension;
-              }
-          }
-          return false;
-      }
-       
-
 
 /**
  * {@link Auth_OpenID_getMathLib} checks for the presence of long
@@ -434,7 +439,7 @@ function Auth_OpenID_detectMathLibrary($exts)
  * instance of a wrapper for that extension module.  If no extension
  * module is found, an instance of {@link Auth_OpenID_MathWrapper} is
  * returned, which wraps the native PHP integer implementation.  The
- * proper calling convention for this method is $lib =
+ * proper calling convention for this method is $lib =&
  * Auth_OpenID_getMathLib().
  *
  * This function checks for the existence of specific long number
@@ -445,18 +450,20 @@ function Auth_OpenID_detectMathLibrary($exts)
  *
  * @package OpenID
  */
-function Auth_OpenID_getMathLib()
+function &Auth_OpenID_getMathLib()
 {
-    // The instance of Auth_OpenID_MathWrapper that we choose to
-    // supply will be stored here, so that subseqent calls to this
-    // method will return a reference to the same object.
+// The instance of Auth_OpenID_MathWrapper that we choose to
+// supply will be stored here, so that subseqent calls to this
+// method will return a reference to the same object.
     static $lib = null;
 
-    if (isset($lib)) {
+    if (isset($lib))
+    {
         return $lib;
     }
 
-    if (Auth_OpenID_noMathSupport()) {
+    if (Auth_OpenID_noMathSupport())
+    {
         $null = null;
         return $null;
     }
@@ -465,9 +472,11 @@ function Auth_OpenID_getMathLib()
     // Auth_OpenID_math_extensions and try to find an extension that
     // works.
     $ext = Auth_OpenID_detectMathLibrary(Auth_OpenID_math_extensions());
-    if ($ext === false) {
+    if ($ext === false)
+    {
         $tried = array();
-        foreach (Auth_OpenID_math_extensions() as $extinfo) {
+        foreach (Auth_OpenID_math_extensions() as $extinfo)
+        {
             $tried[] = $extinfo['extension'];
         }
         $triedstr = implode(", ", $tried);
@@ -487,7 +496,8 @@ function Auth_OpenID_getMathLib()
 
 function Auth_OpenID_setNoMathSupport()
 {
-    if (!defined('Auth_OpenID_NO_MATH_SUPPORT')) {
+    if (!defined('Auth_OpenID_NO_MATH_SUPPORT'))
+    {
         define('Auth_OpenID_NO_MATH_SUPPORT', true);
     }
 }
@@ -497,4 +507,4 @@ function Auth_OpenID_noMathSupport()
     return defined('Auth_OpenID_NO_MATH_SUPPORT');
 }
 
-
+?>
